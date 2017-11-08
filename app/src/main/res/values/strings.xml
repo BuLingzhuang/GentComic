@@ -1,0 +1,6 @@
+<resources>
+    <string name="title_home">主页</string>
+    <string name="title_star">收藏</string>
+    <string name="title_download">下载</string>
+    <string name="title_mine">我的</string>
+</resources>
