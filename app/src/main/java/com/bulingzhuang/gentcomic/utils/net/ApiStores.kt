@@ -18,13 +18,16 @@ interface ApiStores {
     companion object {
         val API_SERVER_URL = "http://39.106.7.250:8080/"
     }
-
+//    http://39.106.7.250:8080/comic/vols/3234_28320
 //    /comic/top/daily/{pageNum}
+//    漫画
 //    /comic/{comicID}
+//    漫画下具体哪一集 返回图片列表直接
+//    /comic/vols/{volsID}
 
     /**
      * 获取主页列表协议
      */
     @GET("comic/top/daily/{pageNum}")
-    fun loadMainList(@Path("pageNum") pageNum: Int):Observable<MainListData>
+    fun loadMainList(@Path("pageNum") pageNum: Int): Observable<MainListData>
 }

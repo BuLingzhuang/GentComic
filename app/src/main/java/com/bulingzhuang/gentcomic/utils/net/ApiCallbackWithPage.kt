@@ -10,14 +10,14 @@ import retrofit2.HttpException
  * 描    述：Api回调
  * ================================================
  */
-abstract class ApiCallback<BLZ> : BaseObserver<BLZ>() {
+abstract class ApiCallbackWithPage<BLZ>(val pageNum:Int) : BaseObserver<BLZ>() {
 
-    abstract fun onSuccess(module: BLZ)
+    abstract fun onSuccess(module: BLZ,pageNum: Int)
     abstract fun onFailure(msg: String?)
     abstract fun onFinish()
 
     override fun onNext(t: BLZ) {
-        onSuccess(t)
+        onSuccess(t,pageNum)
     }
 
     override fun onError(e: Throwable?) {
