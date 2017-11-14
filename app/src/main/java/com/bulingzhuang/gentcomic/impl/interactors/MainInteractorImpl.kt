@@ -1,6 +1,7 @@
 package com.bulingzhuang.gentcomic.impl.interactors
 
 import com.bulingzhuang.gentcomic.entity.MainListData
+import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.interfaces.interactors.MainInteractor
 import com.bulingzhuang.gentcomic.utils.net.ApiCallbackWithPage
 import com.bulingzhuang.gentcomic.utils.net.ApiClient
@@ -15,6 +16,17 @@ import com.bulingzhuang.gentcomic.utils.net.BaseObserver
  * ================================================
  */
 class MainInteractorImpl : BaseInteractorImpl(), MainInteractor {
+
+    /**
+     * 请求天气数据
+     */
+    override fun requestWeatherData(observer: BaseObserver<WeatherData>, city: String) {
+        if (city.isEmpty()) {
+            addSubscription(ApiClient.retrofit().loadWeather(), observer)
+        } else {
+            addSubscription(ApiClient.retrofit().loadWeather(city), observer)
+        }
+    }
 
     /**
      * 请求主页列表数据

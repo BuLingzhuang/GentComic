@@ -1,6 +1,7 @@
 package com.bulingzhuang.gentcomic.interfaces.interactors
 
 import com.bulingzhuang.gentcomic.entity.MainListData
+import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.utils.net.ApiCallbackWithPage
 import com.bulingzhuang.gentcomic.utils.net.BaseObserver
 
@@ -13,6 +14,11 @@ import com.bulingzhuang.gentcomic.utils.net.BaseObserver
  * ================================================
  */
 interface MainInteractor {
+
+    /**
+     * 请求天气数据
+     */
+    fun requestWeatherData(observer:BaseObserver<WeatherData>,city:String)
 
     /**
      * 请求主页列表数据

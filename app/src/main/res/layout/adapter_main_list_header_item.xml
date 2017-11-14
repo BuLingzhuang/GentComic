@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_content"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:foreground="?attr/selectableItemBackground"
+        android:transitionName="cv_content"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="1.5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_foreground"/>
+
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:paddingBottom="5dp"
+                android:paddingEnd="6dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="1"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13sp"
+                    android:ellipsize="end"
+                    android:layout_marginTop="3dp"
+                    android:lines="7"
+                    android:lineSpacingExtra="0dp"
+                    android:lineSpacingMultiplier="0.8"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="一本漫画我是作者"/>
+
+                <ImageView
+                    android:id="@+id/iv_fire"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="3dp"
+                    android:tint="@color/disable_gray"
+                    app:srcCompat="@drawable/ic_fire"/>
+
+                <ImageView
+                    android:id="@+id/iv_start"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/iv_fire"
+                    android:layout_marginTop="8dp"
+                    android:tint="@color/disable_gray"
+                    app:srcCompat="@drawable/ic_star_black_24dp"/>
+
+                <ImageView
+                    android:id="@+id/iv_download"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/iv_start"
+                    android:layout_marginTop="8dp"
+                    android:tint="@color/disable_gray"
+                    app:srcCompat="@drawable/ic_download_black_24dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

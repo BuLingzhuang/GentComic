@@ -1,5 +1,7 @@
 package com.bulingzhuang.gentcomic.interfaces.views
 
+import com.bulingzhuang.gentcomic.entity.WeatherData
+
 /**
  * ================================================
  * 作    者：bulingzhuang
@@ -19,4 +21,9 @@ interface MainView {
      * 结束刷新
      */
     fun setRefreshing(refreshing:Boolean)
+
+    /**
+     * 更新天气信息
+     */
+    fun updateWeather(data: WeatherData.ResultsBean.NowBean,showAnim:Boolean = true)
 }

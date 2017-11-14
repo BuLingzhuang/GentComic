@@ -3,20 +3,23 @@ package com.bulingzhuang.gentcomic.adapters
 import android.content.Context
 import android.content.res.ColorStateList
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewPager
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.entity.MainListData
-import com.bulingzhuang.gentcomic.utils.showLogE
+import com.bulingzhuang.gentcomic.utils.ScrollOffsetTransformer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * ================================================
@@ -26,28 +29,53 @@ import java.util.*
  * 描    述：主页列表数据Adapter
  * ================================================
  */
-class MainListAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainListAdapter(private val context: Context,private val isFullScreen:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mDataList: MutableList<MainListData.ResultBean> = ArrayList()
     private val random = Random()
+    private var mHeaderPagerAdapter: MainListHeaderPagerAdapter? = null
 
     /**
      * 添加全部
      */
-    fun addAll(collection:Collection<MainListData.ResultBean>,isRefresh:Boolean = true) {
-        if (isRefresh) {
-            mDataList.clear()
-        }
-        mDataList.addAll(collection)
-        notifyDataSetChanged()
-    }
+    fun addAll(collection: List<MainListData.ResultBean>, isRefresh: Boolean = true) {
+        if (collection.isNotEmpty()) {
+            if (isRefresh) {
+                mDataList.clear()
+                //添加第一个作为占位标记，实际展示Header内容
+                mDataList.add(collection[0])
+                val headerList = ArrayList<View>()
 
-    /**
-     * 添加单条
-     */
-    fun add(item:MainListData.ResultBean){
-        mDataList.add(item)
-        notifyItemInserted(0)
+                for (position in collection.indices) {
+                    val item = collection[position]
+                    if (position > 4) {//列表内容
+                        mDataList.add(item)
+                    } else {//头部内容
+                        //初始化HeaderAdapter
+                        val inflate = LayoutInflater.from(context).inflate(R.layout.adapter_main_list_header_item, null) as LinearLayout
+                        val ivContent = inflate.findViewById<ImageView>(R.id.iv_content)
+                        //TODO 给图片setUrl
+//                        val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
+//                        val url = GlideUrl(item.image, build)
+//                        Glide.with(context).load(url).into(ivContent)
+                        inflate.findViewById<TextView>(R.id.tv_title).text = item.commicName
+                        random(inflate.findViewById(R.id.iv_download),
+                                inflate.findViewById(R.id.iv_start),
+                                inflate.findViewById(R.id.iv_fire))
+                        inflate.findViewById<CardView>(R.id.cv_content).setOnClickListener {
+                            //TODO 跳转
+                        }
+                        headerList.add(inflate)
+                    }
+                }
+                mHeaderPagerAdapter = MainListHeaderPagerAdapter(headerList)
+                notifyDataSetChanged()
+            } else {
+                val lastSize = mDataList.size
+                mDataList.addAll(collection)
+                notifyItemRangeInserted(lastSize - 1, collection.size)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -58,73 +86,85 @@ class MainListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
         val item = mDataList[position]
         when (holder?.itemViewType) {
             R.layout.adapter_main_list_header -> {
+                val viewHolder = holder as MainListHeaderViewHolder
+                viewHolder.mVpHeader.setPageTransformer(true, ScrollOffsetTransformer(isFullScreen))
+                viewHolder.mVpHeader.offscreenPageLimit = 2
+                viewHolder.mVpHeader.adapter = mHeaderPagerAdapter
+                mHeaderPagerAdapter?.count?.div(2)?.let { viewHolder.mVpHeader.currentItem = it }
             }
             R.layout.adapter_main_list -> {
                 val viewHolder = holder as MainListContentViewHolder
-                val randomStr = Integer.toBinaryString(random.nextInt(8))
-                when (randomStr.length) {
-                    1 -> {
-                        when (randomStr[0]) {
-                            '1' -> {
-                                viewHolder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
-                            }
-                            '0' -> {
-                                viewHolder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                            }
-                        }
-                    }
-                    2 -> {
-                        when (randomStr[0]) {
-                            '1' -> {
-                                viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
-                            }
-                            '0' -> {
-                                viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                            }
-                        }
-                        when (randomStr[1]) {
-                            '1' -> {
-                                viewHolder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
-                            }
-                            '0' -> {
-                                viewHolder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                            }
-                        }
-                    }
-                    3 -> {
-                        when (randomStr[0]) {
-                            '1' -> {
-                                viewHolder.mIvFire.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
-                            }
-                            '0' -> {
-                                viewHolder.mIvFire.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                            }
-                        }
-                        when (randomStr[1]) {
-                            '1' -> {
-                                viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
-                            }
-                            '0' -> {
-                                viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                            }
-                        }
-                        when (randomStr[2]) {
-                            '1' -> {
-                                viewHolder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
-                            }
-                            '0' -> {
-                                viewHolder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                            }
-                        }
-                    }
-                }
-
-                val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
-                val url = GlideUrl(item.image, build)
-                Glide.with(context).load(url).into(viewHolder.mIvContent)
+                random(viewHolder.mIvDownload, viewHolder.mIvStart, viewHolder.mIvFire)
+                //TODO 暂时注掉
+//                val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
+//                val url = GlideUrl(item.image, build)
+//                Glide.with(context).load(url).into(viewHolder.mIvContent)
                 viewHolder.mTvTitle.text = item.commicName
                 viewHolder.itemView.setOnClickListener {
                     //TODO 跳转
+                }
+            }
+        }
+    }
+
+    /**
+     * 随机生成Tint
+     */
+    private fun random(view0: ImageView, view1: ImageView, view2: ImageView) {
+        val randomStr = Integer.toBinaryString(random.nextInt(8))
+        when (randomStr.length) {
+            1 -> {
+                when (randomStr[0]) {
+                    '1' -> {
+                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
+                    }
+                    '0' -> {
+                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    }
+                }
+            }
+            2 -> {
+                when (randomStr[0]) {
+                    '1' -> {
+                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
+                    }
+                    '0' -> {
+                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    }
+                }
+                when (randomStr[1]) {
+                    '1' -> {
+                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
+                    }
+                    '0' -> {
+                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    }
+                }
+            }
+            3 -> {
+                when (randomStr[0]) {
+                    '1' -> {
+                        view2.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
+                    }
+                    '0' -> {
+                        view2.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    }
+                }
+                when (randomStr[1]) {
+                    '1' -> {
+                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
+                    }
+                    '0' -> {
+                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    }
+                }
+                when (randomStr[2]) {
+                    '1' -> {
+                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
+                    }
+                    '0' -> {
+                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    }
                 }
             }
         }
@@ -134,7 +174,7 @@ class MainListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
         val inflate = LayoutInflater.from(context).inflate(viewType, parent, false)
         return when (viewType) {
             R.layout.adapter_main_list_header -> {
-                MainListContentViewHolder(inflate)
+                MainListHeaderViewHolder(inflate)
             }
             R.layout.adapter_main_list -> {
                 MainListContentViewHolder(inflate)
@@ -146,13 +186,11 @@ class MainListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
     }
 
     override fun getItemViewType(position: Int): Int {
-//        return if (position < 5) {
-//            R.layout.adapter_main_list_header
-//        } else {
-//            R.layout.adapter_main_list
-//        }
-        //TODO 暂时返回一种类型
-        return R.layout.adapter_main_list
+        return if (position < 1) {
+            R.layout.adapter_main_list_header
+        } else {
+            R.layout.adapter_main_list
+        }
     }
 
     /**
@@ -164,5 +202,12 @@ class MainListAdapter(private val context: Context) : RecyclerView.Adapter<Recyc
         val mIvFire: ImageView = itemView.findViewById(R.id.iv_fire)
         val mIvStart: ImageView = itemView.findViewById(R.id.iv_start)
         val mIvDownload: ImageView = itemView.findViewById(R.id.iv_download)
+    }
+
+    /**
+     * 头部内容
+     */
+    private inner class MainListHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mVpHeader: ViewPager = itemView.findViewById(R.id.vp_header)
     }
 }

@@ -1,9 +1,11 @@
 package com.bulingzhuang.gentcomic.utils.net
 
 import com.bulingzhuang.gentcomic.entity.MainListData
+import com.bulingzhuang.gentcomic.entity.WeatherData
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * ================================================
@@ -17,6 +19,7 @@ import retrofit2.http.Path
 interface ApiStores {
     companion object {
         val API_SERVER_URL = "http://39.106.7.250:8080/"
+        val API_NEW_WEATHER_SERVER_URL = "https://api.seniverse.com/"
     }
 //    http://39.106.7.250:8080/comic/vols/3234_28320
 //    /comic/top/daily/{pageNum}
@@ -24,6 +27,10 @@ interface ApiStores {
 //    /comic/{comicID}
 //    漫画下具体哪一集 返回图片列表直接
 //    /comic/vols/{volsID}
+
+    @GET("v3/weather/now.json")
+    fun loadWeather(@Query("location") location: String = "上海", @Query("key") key: String = "0dgqeyrbpaxdhejn",
+                    @Query("language") language: String = "zh-Hans", @Query("unit") unit: String = "c"): Observable<WeatherData>
 
     /**
      * 获取主页列表协议

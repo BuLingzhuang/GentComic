@@ -1,19 +1,15 @@
 package com.bulingzhuang.gentcomic.activities
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.bulingzhuang.gentcomic.R
-import com.bulingzhuang.gentcomic.entity.MainListData
+import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.impl.presenters.MainPresenterImpl
 import com.bulingzhuang.gentcomic.interfaces.presenters.MainPresenter
 import com.bulingzhuang.gentcomic.interfaces.views.MainView
+import com.bulingzhuang.gentcomic.utils.Constants
+import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
 import com.bulingzhuang.gentcomic.utils.showSnakeBar
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -67,6 +63,30 @@ class MainActivity : AppCompatActivity(), MainView {
         srl_content.setOnRefreshListener {
             mPresenter.getMainListData(this)
         }
+    }
+
+    /**
+     * 更新天气信息
+     */
+    override fun updateWeather(data: WeatherData.ResultsBean.NowBean, showAnim: Boolean) {
+//        val temp = data.temperature
+//        val code = data.code
+//        if (temp.startsWith("-")) {
+//            temp_weather.refreshTempData(temp.substring(1, temp.length).toInt(), showAnim, true)
+//        } else {
+//            temp_weather.refreshTempData(temp.toInt(), showAnim)
+//        }
+//        when (code) {
+//            "4", "5", "6", "7", "8", "9", "30", "31", "34", "35", "36" -> {
+//                iv_weather.setImageResource(R.drawable.ic_cloud)
+//            }
+//            "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25" -> {
+//                iv_weather.setImageResource(R.drawable.ic_rain)
+//            }
+//            else -> {
+//                iv_weather.setImageResource(R.drawable.ic_sun)
+//            }
+//        }
     }
 
     override fun updateError(eText: String?) {

@@ -1,6 +1,8 @@
 package com.bulingzhuang.gentcomic.interfaces.presenters
 
 import android.content.Context
+import android.support.annotation.Nullable
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 
 /**
@@ -16,7 +18,12 @@ interface MainPresenter {
     /**
      * 初始化Adapter
      */
-    fun initAdapter(context: Context, recyclerView: RecyclerView)
+    fun initAdapter(context: AppCompatActivity, recyclerView: RecyclerView)
+
+    /**
+     * 获取天气数据
+     */
+    fun getWeatherData(context: Context,@Nullable city:String)
 
     /**
      * 获取首页列表内容
