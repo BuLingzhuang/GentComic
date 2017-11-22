@@ -1,11 +1,17 @@
 package com.bulingzhuang.gentcomic.adapters
 
+import android.app.ActivityOptions
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
+import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +19,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bulingzhuang.gentcomic.R
+import com.bulingzhuang.gentcomic.activities.ComicIndexActivity
+import com.bulingzhuang.gentcomic.base.GlideApp
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.utils.ScrollOffsetTransformer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import org.jetbrains.anko.startActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -29,7 +38,7 @@ import kotlin.collections.ArrayList
  * 描    述：主页列表数据Adapter
  * ================================================
  */
-class MainListAdapter(private val context: Context,private val isFullScreen:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainListAdapter(private val context: AppCompatActivity,private val isFullScreen:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mDataList: MutableList<MainListData.ResultBean> = ArrayList()
     private val random = Random()
@@ -55,9 +64,9 @@ class MainListAdapter(private val context: Context,private val isFullScreen:Bool
                         val inflate = LayoutInflater.from(context).inflate(R.layout.adapter_main_list_header_item, null) as LinearLayout
                         val ivContent = inflate.findViewById<ImageView>(R.id.iv_content)
                         //TODO 给图片setUrl
-//                        val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
-//                        val url = GlideUrl(item.image, build)
-//                        Glide.with(context).load(url).into(ivContent)
+                        val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
+                        val url = GlideUrl(item.image, build)
+                        GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(ivContent)
                         inflate.findViewById<TextView>(R.id.tv_title).text = item.commicName
                         random(inflate.findViewById(R.id.iv_download),
                                 inflate.findViewById(R.id.iv_start),
@@ -71,9 +80,8 @@ class MainListAdapter(private val context: Context,private val isFullScreen:Bool
                 mHeaderPagerAdapter = MainListHeaderPagerAdapter(headerList)
                 notifyDataSetChanged()
             } else {
-                val lastSize = mDataList.size
                 mDataList.addAll(collection)
-                notifyItemRangeInserted(lastSize - 1, collection.size)
+                notifyDataSetChanged()
             }
         }
     }
@@ -96,12 +104,18 @@ class MainListAdapter(private val context: Context,private val isFullScreen:Bool
                 val viewHolder = holder as MainListContentViewHolder
                 random(viewHolder.mIvDownload, viewHolder.mIvStart, viewHolder.mIvFire)
                 //TODO 暂时注掉
-//                val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
-//                val url = GlideUrl(item.image, build)
-//                Glide.with(context).load(url).into(viewHolder.mIvContent)
+                val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
+                val url = GlideUrl(item.image, build)
+                GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(viewHolder.mIvContent)
                 viewHolder.mTvTitle.text = item.commicName
-                viewHolder.itemView.setOnClickListener {
-                    //TODO 跳转
+                viewHolder.mCvContent.setOnClickListener {
+                    val intent = Intent(context, ComicIndexActivity::class.java)
+                    intent.putExtra("comic_image",item.image)
+                    intent.putExtra("comic_id",item.commicURL)
+                    intent.putExtra("comic_title",item.commicName)
+                    val options = ActivityOptions.makeSceneTransitionAnimation(context,
+                            Pair(viewHolder.mIvContent as View, "Image_Comic_Index_Header")).toBundle()
+                    context.startActivity(intent,options)
                 }
             }
         }
@@ -197,6 +211,7 @@ class MainListAdapter(private val context: Context,private val isFullScreen:Bool
      * 列表内容
      */
     private inner class MainListContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mCvContent:CardView = itemView.findViewById(R.id.cv_content)
         val mIvContent: ImageView = itemView.findViewById(R.id.iv_content)
         val mTvTitle: TextView = itemView.findViewById(R.id.tv_title)
         val mIvFire: ImageView = itemView.findViewById(R.id.iv_fire)

@@ -3,9 +3,7 @@ package com.bulingzhuang.gentcomic.impl.presenters
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.DisplayMetrics
 import com.bulingzhuang.gentcomic.adapters.MainListAdapter
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.entity.WeatherData
@@ -17,6 +15,7 @@ import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
 import com.bulingzhuang.gentcomic.utils.net.ApiCallback
 import com.bulingzhuang.gentcomic.utils.net.ApiCallbackWithPage
 import com.bulingzhuang.gentcomic.utils.showLogE
+import com.bulingzhuang.gentcomic.utils.showSnakeBar
 import com.google.gson.Gson
 
 /**
@@ -51,8 +50,8 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
         recyclerView.layoutManager = layoutManager
         val dm = context.resources.displayMetrics
 //        showLogE("屏幕height=${dm.heightPixels}，width=${dm.widthPixels}，宽高比=${dm.heightPixels.toFloat()/dm.widthPixels}")
-        val isFullScreen = dm.heightPixels.toFloat()/dm.widthPixels >1.78f
-        mAdapter = MainListAdapter(context,isFullScreen)
+        val isFullScreen = dm.heightPixels.toFloat() / dm.widthPixels > 1.78f
+        mAdapter = MainListAdapter(context, isFullScreen)
         recyclerView.adapter = mAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -97,7 +96,7 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
         if (refresh) {
             mInteractor.requestWeatherData(object : ApiCallback<WeatherData>() {
                 override fun onFailure(msg: String?) {
-                    mView.updateError(msg)
+                    mView.showSnakeBar(msg?.let { it } ?: "请求失败")
                 }
 
                 override fun onFinish() {
@@ -118,33 +117,50 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
     }
 
     /**
+     * 用于加载全部以后显示提示，但只提示一次
+     */
+    private var showSnake = true
+
+    /**
      * 获取主页列表数据
      */
     override fun getMainListData(context: Context, isRefresh: Boolean) {
+        var hasNext = true
         if (isRefresh) {
             mLastPageNum = 1
+            showSnake = true
         } else {
-            ++mLastPageNum
-        }
-        showLogE("加载了第$mLastPageNum 页")
-        mInteractor.requestMainListData(object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
-            override fun onSuccess(module: MainListData, pageNum: Int) {
-                mLastPageNum = pageNum
-                if (mLastPageNum <= 1) {
-                    mAdapter.addAll(module.result)
-                } else {
-                    mAdapter.addAll(module.result, false)
+            if (mLastPageNum < 5) {
+                ++mLastPageNum
+            } else {
+                hasNext = false
+                if (showSnake) {
+                    mView.showSnakeBar("已加载全部内容")
+                    showSnake = false
                 }
             }
+        }
+        if (hasNext) {
+            showLogE("加载了第$mLastPageNum 页")
+            mInteractor.requestMainListData(object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
+                override fun onSuccess(module: MainListData, pageNum: Int) {
+                    mLastPageNum = pageNum
+                    if (mLastPageNum <= 1) {
+                        mAdapter.addAll(module.result)
+                    } else {
+                        mAdapter.addAll(module.result, false)
+                    }
+                }
 
-            override fun onFailure(msg: String?) {
-                mView.updateError(msg)
-            }
+                override fun onFailure(msg: String?) {
+                    mView.showSnakeBar(msg?.let { it } ?: "请求失败")
+                }
 
-            override fun onFinish() {
-                mView.setRefreshing(false)
-            }
+                override fun onFinish() {
+                    mView.setRefreshing(false)
+                }
 
-        })
+            })
+        }
     }
 }

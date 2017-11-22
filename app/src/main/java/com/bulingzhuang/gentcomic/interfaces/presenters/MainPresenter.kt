@@ -26,7 +26,7 @@ interface MainPresenter {
     fun getWeatherData(context: Context,@Nullable city:String)
 
     /**
-     * 获取首页列表内容
+     * 获取首页列表数据
      */
     fun getMainListData(context: Context, isRefresh: Boolean = true)
 }

@@ -7,8 +7,6 @@ import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.impl.presenters.MainPresenterImpl
 import com.bulingzhuang.gentcomic.interfaces.presenters.MainPresenter
 import com.bulingzhuang.gentcomic.interfaces.views.MainView
-import com.bulingzhuang.gentcomic.utils.Constants
-import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
 import com.bulingzhuang.gentcomic.utils.showSnakeBar
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -89,8 +87,8 @@ class MainActivity : AppCompatActivity(), MainView {
 //        }
     }
 
-    override fun updateError(eText: String?) {
-        showSnakeBar(eText?.let { it } ?: "请求失败", cl_gen)
+    override fun showSnakeBar(msg: String) {
+        showSnakeBar(msg, cl_gen)
     }
 
     override fun setRefreshing(refreshing: Boolean) {

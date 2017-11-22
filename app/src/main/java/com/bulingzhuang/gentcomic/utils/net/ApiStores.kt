@@ -1,5 +1,7 @@
 package com.bulingzhuang.gentcomic.utils.net
 
+import com.bulingzhuang.gentcomic.entity.ComicData
+import com.bulingzhuang.gentcomic.entity.ComicIndexData
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.entity.WeatherData
 import io.reactivex.Observable
@@ -37,4 +39,16 @@ interface ApiStores {
      */
     @GET("comic/top/daily/{pageNum}")
     fun loadMainList(@Path("pageNum") pageNum: Int): Observable<MainListData>
+
+    /**
+     * 获取漫画目录协议
+     */
+    @GET("/comic/{comicID}")
+    fun loadComicIndex(@Path("comicID") comicID: String): Observable<ComicIndexData>
+
+    /**
+     * 获取漫画协议
+     */
+    @GET("/comic/vols/{volsID}")
+    fun loadComic(@Path("volsID") volsID: String): Observable<ComicData>
 }
