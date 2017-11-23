@@ -13,7 +13,7 @@ import android.view.View
  */
 class ScrollOffsetTransformer(isFullScreen: Boolean) : ViewPager.PageTransformer {
 
-    private var offset = -8f
+    private var offset = -9f
 
     init {
         offset = if (isFullScreen) {
