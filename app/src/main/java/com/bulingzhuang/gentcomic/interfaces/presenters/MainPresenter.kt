@@ -23,10 +23,15 @@ interface MainPresenter {
     /**
      * 获取天气数据
      */
-    fun getWeatherData(context: Context,@Nullable city:String)
+    fun getWeatherData(context: Context, @Nullable city: String)
 
     /**
      * 获取首页列表数据
      */
     fun getMainListData(context: Context, isRefresh: Boolean = true)
+
+    /**
+     * 销毁操作
+     */
+    fun onDestroy()
 }

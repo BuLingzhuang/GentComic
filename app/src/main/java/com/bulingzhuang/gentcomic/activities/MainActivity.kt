@@ -94,4 +94,9 @@ class MainActivity : AppCompatActivity(), MainView {
     override fun setRefreshing(refreshing: Boolean) {
         srl_content.isRefreshing = refreshing
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.onDestroy()
+    }
 }

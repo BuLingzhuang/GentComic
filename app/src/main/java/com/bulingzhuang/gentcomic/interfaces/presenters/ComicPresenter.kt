@@ -1,6 +1,7 @@
 package com.bulingzhuang.gentcomic.interfaces.presenters
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.widget.TextView
 
 /**
@@ -15,7 +16,12 @@ interface ComicPresenter {
     /**
      * 初始化各类状态监听
      */
-    fun initStatusReceiver(context: Context,tvBattery: TextView, tvTime: TextView, tvNet: TextView)
+    fun init(context: Context, tvBattery: TextView, tvTime: TextView, tvNet: TextView,rvContent: RecyclerView)
+
+    /**
+     * 获取漫画数据
+     */
+    fun getComicData(context: Context,volsID:String)
 
     /**
      * 销毁操作

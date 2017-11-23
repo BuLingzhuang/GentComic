@@ -163,4 +163,8 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
             })
         }
     }
+
+    override fun onDestroy() {
+        mInteractor.doBeforeDestroy()
+    }
 }

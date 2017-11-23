@@ -51,4 +51,11 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
             }
         })
     }
+
+    /**
+     * 销毁操作
+     */
+    override fun onDestroy() {
+        mInteractor.doBeforeDestroy()
+    }
 }

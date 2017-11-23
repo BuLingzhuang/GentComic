@@ -22,4 +22,9 @@ interface ComicIndexPresenter {
      * 获取漫画目录数据
      */
     fun getComicIndexData(context: Context, comicID: String)
+
+    /**
+     * 销毁操作
+     */
+    fun onDestroy()
 }

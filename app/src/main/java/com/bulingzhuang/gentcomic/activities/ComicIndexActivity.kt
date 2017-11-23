@@ -11,6 +11,7 @@ import com.bulingzhuang.gentcomic.base.GlideApp
 import com.bulingzhuang.gentcomic.impl.presenters.ComicIndexPresenterImpl
 import com.bulingzhuang.gentcomic.interfaces.views.ComicIndexView
 import com.bulingzhuang.gentcomic.utils.SystemStatusManager
+import com.bulingzhuang.gentcomic.utils.showSnakeBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
@@ -83,7 +84,7 @@ class ComicIndexActivity : AppCompatActivity(), View.OnClickListener, ComicIndex
     }
 
     override fun showSnakeBar(msg: String) {
-
+        showSnakeBar(msg, cl_gen)
     }
 
     override fun showRefreshing(show: Boolean) {
@@ -92,5 +93,10 @@ class ComicIndexActivity : AppCompatActivity(), View.OnClickListener, ComicIndex
         } else {
             pb.visibility = View.GONE
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.onDestroy()
     }
 }
