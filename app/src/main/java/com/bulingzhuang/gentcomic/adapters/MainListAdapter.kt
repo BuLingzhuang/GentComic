@@ -1,11 +1,8 @@
 package com.bulingzhuang.gentcomic.adapters
 
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
@@ -24,11 +21,8 @@ import com.bulingzhuang.gentcomic.activities.ComicIndexActivity
 import com.bulingzhuang.gentcomic.base.GlideApp
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.utils.ScrollOffsetTransformer
-import com.bulingzhuang.gentcomic.utils.showLogE
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
-import org.jetbrains.anko.startActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -79,7 +73,13 @@ class MainListAdapter(private val context: AppCompatActivity, private val isFull
                                 inflate.findViewById(R.id.iv_start),
                                 inflate.findViewById(R.id.iv_fire))
                         inflate.findViewById<CardView>(R.id.cv_content).setOnClickListener {
-                            //TODO 跳转
+                            val intent = Intent(context, ComicIndexActivity::class.java)
+                            intent.putExtra("comic_image", item.image)
+                            intent.putExtra("comic_id", item.commicURL)
+                            intent.putExtra("comic_title", item.commicName)
+                            val options = ActivityOptions.makeSceneTransitionAnimation(context,
+                                    Pair(ivContent as View, "Image_Comic_Index_Header")).toBundle()
+                            context.startActivity(intent, options)
                         }
                         headerList.add(inflate)
                     }
@@ -109,10 +109,6 @@ class MainListAdapter(private val context: AppCompatActivity, private val isFull
             }
             R.layout.adapter_main_list -> {
                 val viewHolder = holder as MainListContentViewHolder
-                random(viewHolder.mIvDownload, viewHolder.mIvStart, viewHolder.mIvFire)
-                val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
-                val url = GlideUrl(item.image, build)
-                GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(viewHolder.mIvContent)
                 viewHolder.mTvTitle.text = item.commicName
                 if (position > 0) {
                     when ((position - 1) % 3) {
@@ -127,6 +123,10 @@ class MainListAdapter(private val context: AppCompatActivity, private val isFull
                         }
                     }
                 }
+                random(viewHolder.mIvDownload, viewHolder.mIvStart, viewHolder.mIvFire)
+                val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
+                val url = GlideUrl(item.image, build)
+                GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(viewHolder.mIvContent)
                 viewHolder.mCvContent.setOnClickListener {
                     val intent = Intent(context, ComicIndexActivity::class.java)
                     intent.putExtra("comic_image", item.image)

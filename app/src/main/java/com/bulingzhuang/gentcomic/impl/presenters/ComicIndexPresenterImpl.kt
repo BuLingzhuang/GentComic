@@ -5,10 +5,16 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.bulingzhuang.gentcomic.adapters.ComicIndexAdapter
 import com.bulingzhuang.gentcomic.entity.ComicIndexData
+import com.bulingzhuang.gentcomic.entity.ComicReadEntity
 import com.bulingzhuang.gentcomic.impl.interactors.ComicIndexInteractorImpl
 import com.bulingzhuang.gentcomic.interfaces.presenters.ComicIndexPresenter
 import com.bulingzhuang.gentcomic.interfaces.views.ComicIndexView
+import com.bulingzhuang.gentcomic.utils.database
+import com.bulingzhuang.gentcomic.utils.db.ComicReadRowParser
+import com.bulingzhuang.gentcomic.utils.db.DBUtil
 import com.bulingzhuang.gentcomic.utils.net.ApiCallback
+import com.bulingzhuang.gentcomic.utils.showLogE
+import org.jetbrains.anko.db.select
 
 /**
  * ================================================
@@ -26,9 +32,9 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
     /**
      * 初始化Adapter
      */
-    override fun initAdapter(context: Context, recyclerView: RecyclerView, title: String) {
+    override fun initAdapter(context: Context, recyclerView: RecyclerView, title: String, comicID: String) {
         recyclerView.layoutManager = GridLayoutManager(context, 2)
-        mAdapter = ComicIndexAdapter(context,title)
+        mAdapter = ComicIndexAdapter(context, title, comicID)
         recyclerView.adapter = mAdapter
     }
 
@@ -39,6 +45,25 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
         mView.showRefreshing()
         mInteractor.requestComicIndexData(comicID, object : ApiCallback<ComicIndexData>() {
             override fun onSuccess(module: ComicIndexData) {
+                context.database.use {
+                    val select = select(DBUtil.TABLE_read).whereSimple("${DBUtil.READ_comicID} = ?", comicID)
+                    val dataList = ArrayList<ComicReadEntity>(select.parseList(ComicReadRowParser()))
+                    item@ for (item in module.result) {
+                        childItem@ for (childItem in dataList) {
+                            if (item.volsID == childItem.volsID) {
+                                //表示已读过
+                                item.hasRead = true
+                                if (dataList.remove(childItem)) {
+                                    if (dataList.size > 0) {
+                                        break@childItem
+                                    } else {
+                                        break@item
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 mAdapter.addAll(module.result)
             }
 

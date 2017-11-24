@@ -10,5 +10,7 @@ package com.bulingzhuang.gentcomic.entity
  */
 
 class ComicIndexData(val result: List<ResultBean>, code: Int, message: String) : BaseData(code, message) {
-    class ResultBean(val volsID: String, val title: String)
+    class ResultBean(val volsID: String, val title: String) {
+        var hasRead = false
+    }
 }

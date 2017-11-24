@@ -16,7 +16,7 @@ interface ComicIndexPresenter {
     /**
      * 初始化Adapter
      */
-    fun initAdapter(context: Context,recyclerView: RecyclerView,title:String)
+    fun initAdapter(context: Context,recyclerView: RecyclerView,title:String,comicID:String)
 
     /**
      * 获取漫画目录数据

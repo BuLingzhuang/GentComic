@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bulingzhuang.gentcomic.BuildConfig
 import com.bulingzhuang.gentcomic.R
+import com.bulingzhuang.gentcomic.utils.db.DBUtil
 
 /**
  * ================================================
@@ -59,4 +60,4 @@ fun showLogE(msg: String, tag: String = "BLZ") {
     }
 }
 
-//val Context.database: DBUtil get() = DBUtil.getInstance(this.applicationContext)
+val Context.database: DBUtil get() = DBUtil.getInstance(this.applicationContext)

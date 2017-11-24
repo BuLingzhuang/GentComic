@@ -20,7 +20,7 @@ import com.bulingzhuang.gentcomic.utils.showToast
  * 描    述：漫画列表Adapter
  * ================================================
  */
-class ComicIndexAdapter(private val context: Context, private val title: String) : RecyclerView.Adapter<ComicIndexAdapter.ComicIndexViewHolder>() {
+class ComicIndexAdapter(private val context: Context, private val title: String,private val comicID:String) : RecyclerView.Adapter<ComicIndexAdapter.ComicIndexViewHolder>() {
 
     private val mDataList = ArrayList<ComicIndexData.ResultBean>()
 
@@ -38,9 +38,15 @@ class ComicIndexAdapter(private val context: Context, private val title: String)
         if (holder != null) {
             val item = mDataList[position]
             holder.mTvTitle.text = item.title
+            holder.mVRead.visibility = if (item.hasRead) {
+                View.VISIBLE
+            } else {
+                View.INVISIBLE
+            }
             holder.itemView.setOnClickListener {
                 val intent = Intent(context, ComicActivity::class.java)
                 intent.putExtra("title", title)
+                intent.putExtra("comicID", comicID)
                 intent.putExtra("subtitle", item.title)
                 intent.putExtra("volsID", item.volsID)
                 context.startActivity(intent)

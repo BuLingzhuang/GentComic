@@ -20,7 +20,7 @@ import retrofit2.http.Query
  */
 interface ApiStores {
     companion object {
-        val API_SERVER_URL = "http://39.106.7.250:8080/"
+        val API_SERVER_URL = "http://39.106.7.250/"  //http://otakumate.top/
         val API_NEW_WEATHER_SERVER_URL = "https://api.seniverse.com/"
     }
 //    http://39.106.7.250:8080/comic/vols/3234_28320
@@ -43,12 +43,12 @@ interface ApiStores {
     /**
      * 获取漫画目录协议
      */
-    @GET("/comic/{comicID}")
+    @GET("comic/{comicID}")
     fun loadComicIndex(@Path("comicID") comicID: String): Observable<ComicIndexData>
 
     /**
      * 获取漫画协议
      */
-    @GET("/comic/vols/{volsID}")
+    @GET("comic/vols/{volsID}")
     fun loadComic(@Path("volsID") volsID: String): Observable<ComicData>
 }
