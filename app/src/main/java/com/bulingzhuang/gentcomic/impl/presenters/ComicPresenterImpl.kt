@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.ImageView
 import android.widget.TextView
 import com.bulingzhuang.gentcomic.adapters.ComicAdapter
 import com.bulingzhuang.gentcomic.entity.ComicData
@@ -31,24 +32,24 @@ class ComicPresenterImpl(private val mView: ComicView) : ComicPresenter {
 
     private lateinit var mReceiver: ComicReceiver
     private val mInteractor = ComicInteractorImpl()
-    private lateinit var mAdapter:ComicAdapter
+    private lateinit var mAdapter: ComicAdapter
 
     /**
      * 初始化各类状态监听
      */
     @SuppressLint("SetTextI18n")
-    override fun init(context: Context, tvBattery: TextView, tvTime: TextView, tvNet: TextView,rvContent:RecyclerView) {
+    override fun init(context: Context, tvBattery: TextView, ivCharging: ImageView, tvTime: TextView, tvNet: TextView, rvContent: RecyclerView) {
         val calendar = Calendar.getInstance()
         tvTime.text = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
 
-        mReceiver = ComicReceiver(tvBattery, tvTime, tvNet)
+        mReceiver = ComicReceiver(tvBattery, ivCharging, tvTime, tvNet)
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_BATTERY_CHANGED)
         filter.addAction(Intent.ACTION_TIME_TICK)
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
         context.registerReceiver(mReceiver, filter)
         mAdapter = ComicAdapter(context)
-        rvContent.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        rvContent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rvContent.adapter = mAdapter
     }
 
@@ -79,7 +80,7 @@ class ComicPresenterImpl(private val mView: ComicView) : ComicPresenter {
     private fun handleImageList(imageList: ArrayList<String>) {
         mInteractor.handleImageList(imageList, object : ApiCallback<ImageData>() {
             override fun onSuccess(module: ImageData) {
-                if (module.aspectRatio>0f){
+                if (module.aspectRatio > 0f) {
 //                    mAdapter.add(module)
                 }
             }

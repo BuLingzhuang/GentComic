@@ -6,6 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.BatteryManager
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.bulingzhuang.gentcomic.utils.NetWorkUtils
 import com.bulingzhuang.gentcomic.utils.showLogE
@@ -19,15 +22,27 @@ import java.util.*
  * 描    述：电量监听广播
  * ================================================
  */
-class ComicReceiver(private val tvBattery: TextView, private val tvTime: TextView, private val tvNet: TextView) : BroadcastReceiver() {
+class ComicReceiver(private val tvBattery: TextView, private val ivCharging: ImageView, private val tvTime: TextView, private val tvNet: TextView) : BroadcastReceiver() {
     @SuppressLint("SetTextI18n")
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             Intent.ACTION_BATTERY_CHANGED -> {
-                val current = intent.extras.getInt("level")//当前电量
-                val total = intent.extras.getInt("scale")//总电量
+                val extras = intent.extras
+                val current = extras.getInt(BatteryManager.EXTRA_LEVEL)//当前电量
+                val total = extras.getInt(BatteryManager.EXTRA_SCALE)//总电量
+                val status = extras.getInt(BatteryManager.EXTRA_PLUGGED)//用电来源，为0表示使用电池，其余为不同充电途径
+                showLogE("plugged = $status")
                 val percent = current * 100 / total
                 tvBattery.text = "电量:$percent%"
+                when (status) {
+                    0 -> {
+                        ivCharging.visibility = View.GONE
+                    }
+                    else -> {
+                        ivCharging.visibility = View.VISIBLE
+                    }
+                }
+
             }
             Intent.ACTION_TIME_TICK -> {
                 val calendar = Calendar.getInstance()

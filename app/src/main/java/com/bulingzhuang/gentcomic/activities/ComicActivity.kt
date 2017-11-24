@@ -17,7 +17,6 @@ import com.bulingzhuang.gentcomic.utils.showLogE
 import com.bulingzhuang.gentcomic.utils.showSnakeBar
 import kotlinx.android.synthetic.main.activity_comic.*
 import org.jetbrains.anko.db.insert
-import org.jetbrains.anko.db.replace
 import org.jetbrains.anko.db.select
 import org.jetbrains.anko.db.update
 
@@ -63,7 +62,7 @@ class ComicActivity : AppCompatActivity(), ComicView {
             }
         }
 
-        mPresenter.init(this, tv_battery, tv_time, tv_net, rv_content)
+        mPresenter.init(this, tv_battery, iv_charging, tv_time, tv_net, rv_content)
         mPresenter.getComicData(this, volsID)
 
         tv_title.text = title

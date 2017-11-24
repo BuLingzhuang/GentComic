@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_gen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rl_gen"
     tools:context="com.bulingzhuang.gentcomic.activities.ComicActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -45,6 +45,14 @@
             android:textSize="12sp"
             tools:text="电量:27%"/>
 
+        <ImageView
+            android:id="@+id/iv_charging"
+            android:layout_width="12sp"
+            android:visibility="gone"
+            android:layout_height="12sp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/ic_charging"/>
+
         <TextView
             android:id="@+id/tv_net"
             android:layout_width="wrap_content"
@@ -57,11 +65,11 @@
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
-            android:maxWidth="80dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:lines="1"
             android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="80dp"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             tools:text="中华小当家"/>
@@ -71,8 +79,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:lines="1"
             android:ellipsize="end"
+            android:lines="1"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             tools:text="第一卷"/>
