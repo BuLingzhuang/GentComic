@@ -13,7 +13,7 @@ import com.bulingzhuang.gentcomic.utils.net.BaseObserver
  * 描    述：
  * ================================================
  */
-interface MainInteractor {
+interface MainHomeInteractor {
 
     /**
      * 请求天气数据
@@ -23,5 +23,5 @@ interface MainInteractor {
     /**
      * 请求主页列表数据
      */
-    fun requestMainListData(observer: ApiCallbackWithPage<MainListData>)
+    fun requestMainHomeListData(observer: ApiCallbackWithPage<MainListData>)
 }

@@ -2,6 +2,7 @@ package com.bulingzhuang.gentcomic.interfaces.presenters
 
 import android.content.Context
 import android.support.annotation.Nullable
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 
@@ -13,12 +14,12 @@ import android.support.v7.widget.RecyclerView
  * 描    述：
  * ================================================
  */
-interface MainPresenter {
+interface MainHomePresenter {
 
     /**
      * 初始化Adapter
      */
-    fun initAdapter(context: AppCompatActivity, recyclerView: RecyclerView)
+    fun initAdapter(context: FragmentActivity, recyclerView: RecyclerView)
 
     /**
      * 获取天气数据
@@ -28,7 +29,7 @@ interface MainPresenter {
     /**
      * 获取首页列表数据
      */
-    fun getMainListData(context: Context, isRefresh: Boolean = true)
+    fun getMainHomeListData(context: Context, isRefresh: Boolean = true)
 
     /**
      * 销毁操作

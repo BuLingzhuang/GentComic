@@ -1,21 +1,20 @@
 package com.bulingzhuang.gentcomic.impl.presenters
 
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.bulingzhuang.gentcomic.adapters.MainListAdapter
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.entity.WeatherData
-import com.bulingzhuang.gentcomic.impl.interactors.MainInteractorImpl
-import com.bulingzhuang.gentcomic.interfaces.presenters.MainPresenter
-import com.bulingzhuang.gentcomic.interfaces.views.MainView
+import com.bulingzhuang.gentcomic.impl.interactors.MainHomeInteractorImpl
+import com.bulingzhuang.gentcomic.interfaces.presenters.MainHomePresenter
+import com.bulingzhuang.gentcomic.interfaces.views.MainHomeView
 import com.bulingzhuang.gentcomic.utils.Constants
 import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
 import com.bulingzhuang.gentcomic.utils.net.ApiCallback
 import com.bulingzhuang.gentcomic.utils.net.ApiCallbackWithPage
 import com.bulingzhuang.gentcomic.utils.showLogE
-import com.bulingzhuang.gentcomic.utils.showSnakeBar
 import com.google.gson.Gson
 
 /**
@@ -26,9 +25,9 @@ import com.google.gson.Gson
  * 描    述：
  * ================================================
  */
-class MainPresenterImpl(private val mView: MainView) : MainPresenter {
+class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter {
 
-    private val mInteractor = MainInteractorImpl()
+    private val mInteractor = MainHomeInteractorImpl()
     private lateinit var mAdapter: MainListAdapter
     private var mLastPageNum = 1
 
@@ -36,7 +35,7 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
     /**
      * 初始化Adapter
      */
-    override fun initAdapter(context: AppCompatActivity, recyclerView: RecyclerView) {
+    override fun initAdapter(context: FragmentActivity, recyclerView: RecyclerView) {
         val layoutManager = GridLayoutManager(context, 3)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -57,7 +56,7 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastVisibleItem + 1 == mAdapter.itemCount) {
-                    getMainListData(context, false)
+                    getMainHomeListData(context, false)
                 }
             }
 
@@ -124,7 +123,7 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
     /**
      * 获取主页列表数据
      */
-    override fun getMainListData(context: Context, isRefresh: Boolean) {
+    override fun getMainHomeListData(context: Context, isRefresh: Boolean) {
         var hasNext = true
         if (isRefresh) {
             mLastPageNum = 1
@@ -142,7 +141,7 @@ class MainPresenterImpl(private val mView: MainView) : MainPresenter {
         }
         if (hasNext) {
             showLogE("加载了第$mLastPageNum 页")
-            mInteractor.requestMainListData(object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
+            mInteractor.requestMainHomeListData(object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
                 override fun onSuccess(module: MainListData, pageNum: Int) {
                     mLastPageNum = pageNum
                     if (mLastPageNum <= 1) {

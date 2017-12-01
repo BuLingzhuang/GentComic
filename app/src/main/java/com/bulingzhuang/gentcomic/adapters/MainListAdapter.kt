@@ -3,6 +3,7 @@ package com.bulingzhuang.gentcomic.adapters
 import android.app.ActivityOptions
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
@@ -34,7 +35,7 @@ import kotlin.collections.ArrayList
  * 描    述：主页列表数据Adapter
  * ================================================
  */
-class MainListAdapter(private val context: AppCompatActivity, private val isFullScreen: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainListAdapter(private val context: FragmentActivity, private val isFullScreen: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mDataList: MutableList<MainListData.ResultBean> = ArrayList()
     private val random = Random()

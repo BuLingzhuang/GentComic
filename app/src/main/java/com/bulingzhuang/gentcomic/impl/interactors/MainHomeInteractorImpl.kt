@@ -2,7 +2,7 @@ package com.bulingzhuang.gentcomic.impl.interactors
 
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.entity.WeatherData
-import com.bulingzhuang.gentcomic.interfaces.interactors.MainInteractor
+import com.bulingzhuang.gentcomic.interfaces.interactors.MainHomeInteractor
 import com.bulingzhuang.gentcomic.utils.net.ApiCallbackWithPage
 import com.bulingzhuang.gentcomic.utils.net.ApiClient
 import com.bulingzhuang.gentcomic.utils.net.BaseObserver
@@ -15,7 +15,7 @@ import com.bulingzhuang.gentcomic.utils.net.BaseObserver
  * 描    述：
  * ================================================
  */
-class MainInteractorImpl : BaseInteractorImpl(), MainInteractor {
+class MainHomeInteractorImpl : BaseInteractorImpl(), MainHomeInteractor {
 
     /**
      * 请求天气数据
@@ -31,7 +31,7 @@ class MainInteractorImpl : BaseInteractorImpl(), MainInteractor {
     /**
      * 请求主页列表数据
      */
-    override fun requestMainListData(observer: ApiCallbackWithPage<MainListData>) {
+    override fun requestMainHomeListData(observer: ApiCallbackWithPage<MainListData>) {
         if (observer.pageNum < 1) {
             addSubscription(ApiClient.retrofit().loadMainList(1), observer)
         } else {

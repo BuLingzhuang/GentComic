@@ -10,7 +10,7 @@ import com.bulingzhuang.gentcomic.entity.WeatherData
  * 描    述：
  * ================================================
  */
-interface MainView {
+interface MainHomeView {
 
     /**
      * 返回错误信息
