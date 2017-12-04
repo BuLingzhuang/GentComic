@@ -10,6 +10,11 @@ package com.bulingzhuang.gentcomic.interfaces.views
  */
 interface ComicIndexView {
     /**
+     * 刷新star、download状态
+     */
+    fun refreshStatus(isStar:Boolean,isDownload:Boolean)
+
+    /**
      * 返回错误信息
      */
     fun showSnakeBar(msg:String)

@@ -16,7 +16,22 @@ interface ComicIndexPresenter {
     /**
      * 初始化Adapter
      */
-    fun initAdapter(context: Context,recyclerView: RecyclerView,title:String,comicID:String)
+    fun initAdapter(context: Context, recyclerView: RecyclerView, title: String, comicID: String)
+
+    /**
+     * 检查是否已收藏、已下载
+     */
+    fun checkStatus(context: Context, comicID: String)
+
+    /**
+     * 点击start按钮
+     */
+    fun clickStar(context: Context)
+
+    /**
+     * 点击download按钮
+     */
+    fun clickDownload(context: Context)
 
     /**
      * 获取漫画目录数据

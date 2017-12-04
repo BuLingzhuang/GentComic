@@ -1,9 +1,11 @@
 package com.bulingzhuang.gentcomic.activities
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
 import com.bulingzhuang.gentcomic.R
@@ -46,7 +48,8 @@ class ComicIndexActivity : AppCompatActivity(), View.OnClickListener, ComicIndex
         val comicID = intent.getStringExtra("comic_id")
         val imageUrl = intent.getStringExtra("comic_image")
         val title = intent.getStringExtra("comic_title")
-        mPresenter.initAdapter(this, rv_content,title,comicID)
+        mPresenter.checkStatus(this, comicID)
+        mPresenter.initAdapter(this, rv_content, title, comicID)
         setViewsOnClickListener(rl_back, rl_share, ll_star, ll_download)
         tv_title.text = title
         GlideApp.with(this).asDrawable().load(imageUrl).into(object : SimpleTarget<Drawable>() {
@@ -60,7 +63,7 @@ class ComicIndexActivity : AppCompatActivity(), View.OnClickListener, ComicIndex
                         .into(iv_headerBg)
             }
         })
-        mPresenter.getComicIndexData(this,comicID)
+        mPresenter.getComicIndexData(this, comicID)
     }
 
     private fun setViewsOnClickListener(vararg views: View) {
@@ -76,10 +79,32 @@ class ComicIndexActivity : AppCompatActivity(), View.OnClickListener, ComicIndex
             }
             R.id.rl_share -> {
             }
-            R.id.ll_star -> {
-            }
-            R.id.ll_download -> {
-            }
+            R.id.ll_star -> mPresenter.clickStar(this)
+            R.id.ll_download -> mPresenter.clickDownload(this)
+        }
+    }
+
+    /**
+     * 刷新star、download状态
+     */
+    override fun refreshStatus(isStar: Boolean, isDownload: Boolean) {
+        if (isStar) {
+            iv_star.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.amber600))
+            tv_star.text = "取消收藏"
+            tv_star.setTextColor(ContextCompat.getColor(this, R.color.amber600))
+        } else {
+            iv_star.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, android.R.color.white))
+            tv_star.text = "收藏"
+            tv_star.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+        }
+        if (isDownload) {
+            iv_download.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.teal600))
+            tv_download.text = "已下载"
+            tv_download.setTextColor(ContextCompat.getColor(this, R.color.teal600))
+        } else {
+            iv_download.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, android.R.color.white))
+            tv_download.text = "下载"
+            tv_download.setTextColor(ContextCompat.getColor(this, android.R.color.white))
         }
     }
 

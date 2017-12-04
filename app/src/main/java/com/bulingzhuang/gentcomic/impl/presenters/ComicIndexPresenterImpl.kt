@@ -6,15 +6,18 @@ import android.support.v7.widget.RecyclerView
 import com.bulingzhuang.gentcomic.adapters.ComicIndexAdapter
 import com.bulingzhuang.gentcomic.entity.ComicIndexData
 import com.bulingzhuang.gentcomic.entity.ComicReadEntity
+import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
 import com.bulingzhuang.gentcomic.impl.interactors.ComicIndexInteractorImpl
 import com.bulingzhuang.gentcomic.interfaces.presenters.ComicIndexPresenter
 import com.bulingzhuang.gentcomic.interfaces.views.ComicIndexView
 import com.bulingzhuang.gentcomic.utils.database
 import com.bulingzhuang.gentcomic.utils.db.ComicReadRowParser
+import com.bulingzhuang.gentcomic.utils.db.ComicStatusRowParser
 import com.bulingzhuang.gentcomic.utils.db.DBUtil
 import com.bulingzhuang.gentcomic.utils.net.ApiCallback
-import com.bulingzhuang.gentcomic.utils.showLogE
+import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.db.update
 
 /**
  * ================================================
@@ -28,6 +31,7 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
 
     private val mInteractor = ComicIndexInteractorImpl()
     private lateinit var mAdapter: ComicIndexAdapter
+    private lateinit var mStatus: ComicStatusEntity
 
     /**
      * 初始化Adapter
@@ -37,6 +41,44 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
         mAdapter = ComicIndexAdapter(context, title, comicID)
         recyclerView.adapter = mAdapter
     }
+
+    /**
+     * 检查是否已收藏、已下载
+     */
+    override fun checkStatus(context: Context, comicID: String) {
+        context.database.use {
+            val select = select(DBUtil.TABLE_status).whereSimple("${DBUtil.STATUS_comicID} = ?", comicID)
+            val dataList = ArrayList<ComicStatusEntity>(select.parseList(ComicStatusRowParser()))
+            mStatus = if (dataList.size <= 0) {
+                insert(DBUtil.TABLE_status, DBUtil.STATUS_comicID to comicID, DBUtil.STATUS_isStar to "0", DBUtil.STATUS_isDownload to "0")
+                ComicStatusEntity(comicID, false, false)
+            } else {
+                dataList[0]
+            }
+            mView.refreshStatus(mStatus.isStar, mStatus.isDownload)
+        }
+    }
+
+    /**
+     * 点击start按钮
+     */
+    override fun clickStar(context: Context) {
+        val currentStar = !mStatus.isStar
+        context.database.use {
+            update(DBUtil.TABLE_status,
+                    DBUtil.STATUS_comicID to mStatus.comicID,
+                    DBUtil.STATUS_isStar to if (currentStar) "1" else "0",
+                    DBUtil.STATUS_isDownload to mStatus.isDownload)
+                    .whereArgs("${DBUtil.STATUS_comicID} = {${DBUtil.STATUS_comicID}}", DBUtil.STATUS_comicID to mStatus.comicID).exec()
+        }
+        mStatus.isStar = currentStar
+        mView.refreshStatus(mStatus.isStar, mStatus.isDownload)
+    }
+
+    /**
+     * 点击download按钮
+     */
+    override fun clickDownload(context: Context) {}
 
     /**
      * 获取漫画列表数据
