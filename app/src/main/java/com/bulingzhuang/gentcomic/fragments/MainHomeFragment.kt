@@ -11,6 +11,7 @@ import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.impl.presenters.MainHomePresenterImpl
 import com.bulingzhuang.gentcomic.interfaces.presenters.MainHomePresenter
 import com.bulingzhuang.gentcomic.interfaces.views.MainHomeView
+import com.bulingzhuang.gentcomic.utils.showLogE
 import com.bulingzhuang.gentcomic.utils.showSnakeBar
 import kotlinx.android.synthetic.main.fragment_main_home.*
 
@@ -36,6 +37,8 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
         }
     }
 
+    var onCreateTag = true
+
     private lateinit var mPresenter: MainHomePresenter
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -46,7 +49,17 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-        mPresenter.getMainHomeListData(context)
+        onCreateTag = true
+        mPresenter.getMainHomeListData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!onCreateTag) {
+            showLogE("本地刷新")
+            mPresenter.refreshStar()
+        }
+        onCreateTag = false
     }
 
     override fun onDestroy() {
@@ -55,12 +68,12 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
     }
 
     private fun init() {
-        mPresenter = MainHomePresenterImpl(this)
-        mPresenter.initAdapter(activity, rv_content)
+        mPresenter = MainHomePresenterImpl(this, activity)
+        mPresenter.initAdapter(rv_content)
 
         srl_content.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark)
         srl_content.setOnRefreshListener {
-            mPresenter.getMainHomeListData(context)
+            mPresenter.getMainHomeListData()
         }
     }
 

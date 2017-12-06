@@ -40,10 +40,19 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
     private val random = Random()
     private var mHeaderPagerAdapter: MainHomeHeaderPagerAdapter? = null
     private var marginPx = 0
+    private val mStarList = ArrayList<String>()
 
     init {
         val scale = context.resources.displayMetrics.density
         marginPx = (scale * 4 + 0.5f).toInt()
+    }
+
+    /**
+     * 刷新收藏列表标记
+     */
+    fun refreshStarList(collection: List<String>) {
+        mStarList.clear()
+        mStarList.addAll(collection)
     }
 
     /**
@@ -69,9 +78,12 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
                         val url = GlideUrl(item.image, build)
                         GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(ivContent)
                         inflate.findViewById<TextView>(R.id.tv_title).text = item.commicName
-                        random(inflate.findViewById(R.id.iv_download),
-                                inflate.findViewById(R.id.iv_star),
-                                inflate.findViewById(R.id.iv_fire))
+                        if (mStarList.contains(item.commicURL)) {
+                            inflate.findViewById<ImageView>(R.id.iv_star).imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
+                        } else {
+                            inflate.findViewById<ImageView>(R.id.iv_star).imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                        }
+                        inflate.findViewById<ImageView>(R.id.iv_fire).imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
                         inflate.findViewById<CardView>(R.id.cv_content).setOnClickListener {
                             val intent = Intent(context, ComicIndexActivity::class.java)
                             intent.putExtra("comic_image", item.image)
@@ -113,17 +125,22 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
                 if (position > 0) {
                     when ((position - 1) % 3) {
                         0 -> {//左侧
-                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 3, marginPx*2, marginPx, marginPx*2)
+                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 3, marginPx * 2, marginPx, marginPx * 2)
                         }
                         1 -> {//中间
-                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx*2, marginPx*2, marginPx*2, marginPx*2)
+                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 2, marginPx * 2, marginPx * 2, marginPx * 2)
                         }
                         2 -> {//右侧
-                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx, marginPx*2, marginPx * 3, marginPx*2)
+                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx, marginPx * 2, marginPx * 3, marginPx * 2)
                         }
                     }
                 }
-                random(viewHolder.mIvDownload, viewHolder.mIvStart, viewHolder.mIvFire)
+                if (mStarList.contains(item.commicURL)) {
+                    viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
+                } else {
+                    viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                }
+                viewHolder.mIvFire.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
                 val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
                 val url = GlideUrl(item.image, build)
                 GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(viewHolder.mIvContent)
@@ -135,69 +152,6 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
                     val options = ActivityOptions.makeSceneTransitionAnimation(context,
                             Pair(viewHolder.mIvContent as View, "Image_Comic_Index_Header")).toBundle()
                     context.startActivity(intent, options)
-                }
-            }
-        }
-    }
-
-    /**
-     * 随机生成Tint
-     */
-    private fun random(view0: ImageView, view1: ImageView, view2: ImageView) {
-        val randomStr = Integer.toBinaryString(random.nextInt(8))
-        when (randomStr.length) {
-            1 -> {
-                when (randomStr[0]) {
-                    '1' -> {
-                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
-                    }
-                    '0' -> {
-                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                    }
-                }
-            }
-            2 -> {
-                when (randomStr[0]) {
-                    '1' -> {
-                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
-                    }
-                    '0' -> {
-                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                    }
-                }
-                when (randomStr[1]) {
-                    '1' -> {
-                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
-                    }
-                    '0' -> {
-                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                    }
-                }
-            }
-            3 -> {
-                when (randomStr[0]) {
-                    '1' -> {
-                        view2.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
-                    }
-                    '0' -> {
-                        view2.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                    }
-                }
-                when (randomStr[1]) {
-                    '1' -> {
-                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
-                    }
-                    '0' -> {
-                        view1.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                    }
-                }
-                when (randomStr[2]) {
-                    '1' -> {
-                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.teal600))
-                    }
-                    '0' -> {
-                        view0.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-                    }
                 }
             }
         }

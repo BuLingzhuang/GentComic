@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.bulingzhuang.gentcomic.adapters.MainHomeAdapter
+import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.impl.interactors.MainHomeInteractorImpl
@@ -12,10 +13,14 @@ import com.bulingzhuang.gentcomic.interfaces.presenters.MainHomePresenter
 import com.bulingzhuang.gentcomic.interfaces.views.MainHomeView
 import com.bulingzhuang.gentcomic.utils.Constants
 import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
+import com.bulingzhuang.gentcomic.utils.database
+import com.bulingzhuang.gentcomic.utils.db.ComicStatusRowParser
+import com.bulingzhuang.gentcomic.utils.db.DBUtil
 import com.bulingzhuang.gentcomic.utils.net.ApiCallback
 import com.bulingzhuang.gentcomic.utils.net.ApiCallbackWithPage
 import com.bulingzhuang.gentcomic.utils.showLogE
 import com.google.gson.Gson
+import org.jetbrains.anko.db.select
 
 /**
  * ================================================
@@ -25,7 +30,7 @@ import com.google.gson.Gson
  * 描    述：
  * ================================================
  */
-class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter {
+class MainHomePresenterImpl(private val mView: MainHomeView, private val context: FragmentActivity) : MainHomePresenter {
 
     private val mInteractor = MainHomeInteractorImpl()
     private lateinit var mAdapter: MainHomeAdapter
@@ -35,7 +40,7 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
     /**
      * 初始化Adapter
      */
-    override fun initAdapter(context: FragmentActivity, recyclerView: RecyclerView) {
+    override fun initAdapter(recyclerView: RecyclerView) {
         val layoutManager = GridLayoutManager(context, 3)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -56,7 +61,7 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastVisibleItem + 1 == mAdapter.itemCount) {
-                    getMainHomeListData(context, false)
+                    getMainHomeListData(false)
                 }
             }
 
@@ -73,7 +78,7 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
     /**
      * 获取天气数据
      */
-    override fun getWeatherData(context: Context, city: String) {
+    override fun getWeatherData(city: String) {
         val lastRefreshDataStr = SharePreferencesUtil.getString(Constants.SP_MAIN_LAST_WEATHER_REFRESH_DATA)
         showLogE("上次一访问天气接口数据：$lastRefreshDataStr")
         var refresh = true
@@ -123,7 +128,7 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
     /**
      * 获取主页列表数据
      */
-    override fun getMainHomeListData(context: Context, isRefresh: Boolean) {
+    override fun getMainHomeListData(isRefresh: Boolean) {
         var hasNext = true
         if (isRefresh) {
             mLastPageNum = 1
@@ -141,6 +146,7 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
         }
         if (hasNext) {
             showLogE("加载了第$mLastPageNum 页")
+            refreshStarList()
             mInteractor.requestMainHomeListData(object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
                 override fun onSuccess(module: MainListData, pageNum: Int) {
                     mLastPageNum = pageNum
@@ -161,6 +167,29 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
 
             })
         }
+    }
+
+    /**
+     * 只刷新本地收藏标记
+     */
+    override fun refreshStar() {
+        refreshStarList()
+        mAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * 刷新Adapter中的收藏标记
+     */
+    private fun refreshStarList() {
+        val starComicIdList = ArrayList<String>()
+        context.database.use {
+            val select = select(DBUtil.TABLE_status)
+            val dataList = ArrayList<ComicStatusEntity>(select.parseList(ComicStatusRowParser()))
+            dataList.filter { it.isStar }.forEach {
+                starComicIdList.add(it.comicID)
+            }
+        }
+        mAdapter.refreshStarList(starComicIdList)
     }
 
     override fun onDestroy() {

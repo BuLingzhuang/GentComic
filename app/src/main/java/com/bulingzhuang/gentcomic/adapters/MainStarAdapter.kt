@@ -1,7 +1,6 @@
 package com.bulingzhuang.gentcomic.adapters
 
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.support.v4.app.FragmentActivity
@@ -61,7 +60,7 @@ class MainStarAdapter(private val context: FragmentActivity) : RecyclerView.Adap
             val url = GlideUrl(item.imageUrl, build)
             GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(holder.mIvContent)
             holder.mTvTitle.text = item.title
-            random(holder.mIvFire)
+            holder.mIvFire.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
             if (item.isStar) {
                 holder.mIvStar.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
             } else {
@@ -90,21 +89,6 @@ class MainStarAdapter(private val context: FragmentActivity) : RecyclerView.Adap
     }
 
     override fun getItemCount(): Int = mDataList.size
-
-    /**
-     * 随机生成Tint
-     */
-    private fun random(view: ImageView) {
-        val randomInt = random.nextInt(3)
-        when (randomInt) {
-            0, 1 -> {
-                view.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
-            }
-            2 -> {
-                view.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
-            }
-        }
-    }
 
     /**
      * 列表内容

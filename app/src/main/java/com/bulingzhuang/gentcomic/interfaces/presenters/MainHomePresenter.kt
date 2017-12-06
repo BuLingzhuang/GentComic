@@ -19,17 +19,22 @@ interface MainHomePresenter {
     /**
      * 初始化Adapter
      */
-    fun initAdapter(context: FragmentActivity, recyclerView: RecyclerView)
+    fun initAdapter(recyclerView: RecyclerView)
 
     /**
      * 获取天气数据
      */
-    fun getWeatherData(context: Context, @Nullable city: String)
+    fun getWeatherData(@Nullable city: String)
 
     /**
      * 获取首页列表数据
      */
-    fun getMainHomeListData(context: Context, isRefresh: Boolean = true)
+    fun getMainHomeListData(isRefresh: Boolean = true)
+
+    /**
+     * 只刷新本地收藏标记
+     */
+    fun refreshStar()
 
     /**
      * 销毁操作

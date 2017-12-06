@@ -1,14 +1,7 @@
 package com.bulingzhuang.gentcomic.impl.presenters
 
-import android.content.Context
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.transition.Fade
-import android.transition.TransitionManager
-import android.view.View
-import android.widget.ImageView
 import com.bulingzhuang.gentcomic.adapters.MainStarAdapter
 import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
 import com.bulingzhuang.gentcomic.interfaces.presenters.MainStarPresenter
@@ -26,7 +19,7 @@ import org.jetbrains.anko.db.select
  * 描    述：
  * ================================================
  */
-class MainStarPresenterImpl(val mView: MainStarView, val context: FragmentActivity) : MainStarPresenter {
+class MainStarPresenterImpl(private val mView: MainStarView, val context: FragmentActivity) : MainStarPresenter {
 
     private lateinit var mAdapter: MainStarAdapter
 
