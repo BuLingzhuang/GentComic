@@ -1,7 +1,6 @@
 package com.bulingzhuang.gentcomic.utils.db
 
 import com.bulingzhuang.gentcomic.entity.ComicReadEntity
-import com.bulingzhuang.gentcomic.utils.showLogE
 import org.jetbrains.anko.db.RowParser
 
 /**
@@ -14,8 +13,7 @@ import org.jetbrains.anko.db.RowParser
  */
 class ComicReadRowParser : RowParser<ComicReadEntity> {
     override fun parseRow(columns: Array<Any?>): ComicReadEntity {
-        val comicReadEntity = ComicReadEntity(columns[0] as String, columns[1] as Long, columns[2] as String, columns[3] as Long)
-        showLogE("获取的数据：$comicReadEntity")
-        return comicReadEntity
+        //        showLogE("获取的数据：$comicReadEntity")
+        return ComicReadEntity(columns[0] as String, columns[1] as Long, columns[2] as String, columns[3] as Long)
     }
 }

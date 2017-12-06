@@ -21,7 +21,7 @@ interface ComicIndexPresenter {
     /**
      * 检查是否已收藏、已下载
      */
-    fun checkStatus(context: Context, comicID: String)
+    fun checkStatus(context: Context,title:String,imageUrl:String, comicID: String)
 
     /**
      * 点击start按钮

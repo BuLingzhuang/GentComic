@@ -56,7 +56,7 @@
                     app:srcCompat="@drawable/ic_fire"/>
 
                 <ImageView
-                    android:id="@+id/iv_start"
+                    android:id="@+id/iv_star"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginStart="3dp"
@@ -73,7 +73,7 @@
                     android:layout_marginStart="3dp"
                     android:layout_marginTop="1.8dp"
                     android:tint="@color/disable_gray"
-                    app:layout_constraintStart_toEndOf="@id/iv_start"
+                    app:layout_constraintStart_toEndOf="@id/iv_star"
                     app:layout_constraintTop_toBottomOf="@id/tv_title"
                     app:srcCompat="@drawable/ic_download_black_24dp"/>
             </android.support.constraint.ConstraintLayout>

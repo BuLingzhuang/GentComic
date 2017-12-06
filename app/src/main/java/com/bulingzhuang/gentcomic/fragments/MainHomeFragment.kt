@@ -12,7 +12,7 @@ import com.bulingzhuang.gentcomic.impl.presenters.MainHomePresenterImpl
 import com.bulingzhuang.gentcomic.interfaces.presenters.MainHomePresenter
 import com.bulingzhuang.gentcomic.interfaces.views.MainHomeView
 import com.bulingzhuang.gentcomic.utils.showSnakeBar
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_main_home.*
 
 /**
  * ================================================
@@ -20,14 +20,14 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * 版    本：1.0
  * 邮    箱：bulingzhuang@foxmail.com
  * 创建日期：2017/12/1
- * 描    述：HomeFragment
+ * 描    述：MainHomeFragment
  * ================================================
  */
-class HomeFragment : BaseFragment(), MainHomeView {
+class MainHomeFragment : BaseFragment(), MainHomeView {
 
     companion object {
-        fun newInstance(title: String): HomeFragment {
-            val fragment = HomeFragment()
+        fun newInstance(title: String): MainHomeFragment {
+            val fragment = MainHomeFragment()
             val args = Bundle()
             fragment.title = title
             args.putString(TITLE, title)
@@ -40,7 +40,7 @@ class HomeFragment : BaseFragment(), MainHomeView {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_home, container, false)
+        return inflater?.inflate(R.layout.fragment_main_home, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

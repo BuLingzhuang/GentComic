@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.bulingzhuang.gentcomic.adapters.MainListAdapter
+import com.bulingzhuang.gentcomic.adapters.MainHomeAdapter
 import com.bulingzhuang.gentcomic.entity.MainListData
 import com.bulingzhuang.gentcomic.entity.WeatherData
 import com.bulingzhuang.gentcomic.impl.interactors.MainHomeInteractorImpl
@@ -28,7 +28,7 @@ import com.google.gson.Gson
 class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter {
 
     private val mInteractor = MainHomeInteractorImpl()
-    private lateinit var mAdapter: MainListAdapter
+    private lateinit var mAdapter: MainHomeAdapter
     private var mLastPageNum = 1
 
     private var mLastVisibleItem = 0
@@ -50,7 +50,7 @@ class MainHomePresenterImpl(private val mView: MainHomeView) : MainHomePresenter
         val dm = context.resources.displayMetrics
 //        showLogE("屏幕height=${dm.heightPixels}，width=${dm.widthPixels}，宽高比=${dm.heightPixels.toFloat()/dm.widthPixels}")
         val isFullScreen = dm.heightPixels.toFloat() / dm.widthPixels > 1.78f
-        mAdapter = MainListAdapter(context, isFullScreen)
+        mAdapter = MainHomeAdapter(context, isFullScreen)
         recyclerView.adapter = mAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {

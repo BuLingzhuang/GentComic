@@ -67,7 +67,7 @@
                     app:srcCompat="@drawable/ic_fire"/>
 
                 <ImageView
-                    android:id="@+id/iv_start"
+                    android:id="@+id/iv_star"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_alignParentEnd="true"
@@ -81,7 +81,7 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_below="@id/iv_start"
+                    android:layout_below="@id/iv_star"
                     android:layout_marginTop="8dp"
                     android:tint="@color/disable_gray"
                     app:srcCompat="@drawable/ic_download_black_24dp"/>

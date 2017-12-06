@@ -6,7 +6,6 @@ import android.content.res.ColorStateList
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Pair
@@ -35,11 +34,11 @@ import kotlin.collections.ArrayList
  * 描    述：主页列表数据Adapter
  * ================================================
  */
-class MainListAdapter(private val context: FragmentActivity, private val isFullScreen: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MainHomeAdapter(private val context: FragmentActivity, private val isFullScreen: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mDataList: MutableList<MainListData.ResultBean> = ArrayList()
     private val random = Random()
-    private var mHeaderPagerAdapter: MainListHeaderPagerAdapter? = null
+    private var mHeaderPagerAdapter: MainHomeHeaderPagerAdapter? = null
     private var marginPx = 0
 
     init {
@@ -71,7 +70,7 @@ class MainListAdapter(private val context: FragmentActivity, private val isFullS
                         GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(ivContent)
                         inflate.findViewById<TextView>(R.id.tv_title).text = item.commicName
                         random(inflate.findViewById(R.id.iv_download),
-                                inflate.findViewById(R.id.iv_start),
+                                inflate.findViewById(R.id.iv_star),
                                 inflate.findViewById(R.id.iv_fire))
                         inflate.findViewById<CardView>(R.id.cv_content).setOnClickListener {
                             val intent = Intent(context, ComicIndexActivity::class.java)
@@ -85,7 +84,7 @@ class MainListAdapter(private val context: FragmentActivity, private val isFullS
                         headerList.add(inflate)
                     }
                 }
-                mHeaderPagerAdapter = MainListHeaderPagerAdapter(headerList)
+                mHeaderPagerAdapter = MainHomeHeaderPagerAdapter(headerList)
                 notifyDataSetChanged()
             } else {
                 mDataList.addAll(collection)
@@ -101,15 +100,15 @@ class MainListAdapter(private val context: FragmentActivity, private val isFullS
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val item = mDataList[position]
         when (holder?.itemViewType) {
-            R.layout.adapter_main_list_header -> {
-                val viewHolder = holder as MainListHeaderViewHolder
+            R.layout.adapter_main_home_header -> {
+                val viewHolder = holder as MainHomeHeaderViewHolder
                 viewHolder.mVpHeader.setPageTransformer(true, ScrollOffsetTransformer(isFullScreen))
                 viewHolder.mVpHeader.offscreenPageLimit = 2
                 viewHolder.mVpHeader.adapter = mHeaderPagerAdapter
                 mHeaderPagerAdapter?.count?.div(2)?.let { viewHolder.mVpHeader.currentItem = it }
             }
-            R.layout.adapter_main_list -> {
-                val viewHolder = holder as MainListContentViewHolder
+            R.layout.adapter_main_home -> {
+                val viewHolder = holder as MainHomeContentViewHolder
                 viewHolder.mTvTitle.text = item.commicName
                 if (position > 0) {
                     when ((position - 1) % 3) {
@@ -207,42 +206,42 @@ class MainListAdapter(private val context: FragmentActivity, private val isFullS
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         val inflate = LayoutInflater.from(context).inflate(viewType, parent, false)
         return when (viewType) {
-            R.layout.adapter_main_list_header -> {
-                MainListHeaderViewHolder(inflate)
+            R.layout.adapter_main_home_header -> {
+                MainHomeHeaderViewHolder(inflate)
             }
-            R.layout.adapter_main_list -> {
-                MainListContentViewHolder(inflate)
+            R.layout.adapter_main_home -> {
+                MainHomeContentViewHolder(inflate)
             }
             else -> {
-                MainListContentViewHolder(inflate)
+                MainHomeContentViewHolder(inflate)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (position < 1) {
-            R.layout.adapter_main_list_header
+            R.layout.adapter_main_home_header
         } else {
-            R.layout.adapter_main_list
+            R.layout.adapter_main_home
         }
     }
 
     /**
      * 列表内容
      */
-    private inner class MainListContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private inner class MainHomeContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mCvContent: CardView = itemView.findViewById(R.id.cv_content)
         val mIvContent: ImageView = itemView.findViewById(R.id.iv_content)
         val mTvTitle: TextView = itemView.findViewById(R.id.tv_title)
         val mIvFire: ImageView = itemView.findViewById(R.id.iv_fire)
-        val mIvStart: ImageView = itemView.findViewById(R.id.iv_start)
+        val mIvStart: ImageView = itemView.findViewById(R.id.iv_star)
         val mIvDownload: ImageView = itemView.findViewById(R.id.iv_download)
     }
 
     /**
      * 头部内容
      */
-    private inner class MainListHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private inner class MainHomeHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mVpHeader: ViewPager = itemView.findViewById(R.id.vp_header)
     }
 }

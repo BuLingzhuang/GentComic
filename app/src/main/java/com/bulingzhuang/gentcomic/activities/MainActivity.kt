@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.adapters.CommonPagerAdapter
 import com.bulingzhuang.gentcomic.base.BaseFragment
-import com.bulingzhuang.gentcomic.fragments.HomeFragment
+import com.bulingzhuang.gentcomic.fragments.MainHomeFragment
+import com.bulingzhuang.gentcomic.fragments.MainStarFragment
 import com.bulingzhuang.gentcomic.fragments.TestFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -30,8 +31,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        mFragmentList.add(HomeFragment.newInstance(resources.getString(R.string.title_home)))
-        mFragmentList.add(TestFragment.newInstance(resources.getString(R.string.title_star)))
+        mFragmentList.add(MainHomeFragment.newInstance(resources.getString(R.string.title_home)))
+        mFragmentList.add(MainStarFragment.newInstance(resources.getString(R.string.title_star)))
         mFragmentList.add(TestFragment.newInstance(resources.getString(R.string.title_download)))
         mFragmentList.add(TestFragment.newInstance(resources.getString(R.string.title_mine)))
         vp_content.adapter = CommonPagerAdapter(supportFragmentManager, mFragmentList)

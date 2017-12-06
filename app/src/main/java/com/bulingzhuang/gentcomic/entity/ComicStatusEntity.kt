@@ -8,9 +8,9 @@ package com.bulingzhuang.gentcomic.entity
  * 描    述：
  * ================================================
  */
-class ComicStatusEntity(val comicID: String, var isStar: Boolean, var isDownload: Boolean) {
+class ComicStatusEntity(val comicID: String, val title: String, val imageUrl: String, var isStar: Boolean, var isDownload: Boolean, val createTime: Long) {
 
     override fun toString(): String {
-        return "comicID = $comicID，isStar = $isStar，isDownload = $isDownload"
+        return "comicID = $comicID，title = $title，imageUrl = $imageUrl，isStar = $isStar，isDownload = $isDownload，createTime = $createTime"
     }
 }

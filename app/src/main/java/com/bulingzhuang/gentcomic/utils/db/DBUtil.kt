@@ -25,8 +25,11 @@ class DBUtil(context: Context) : ManagedSQLiteOpenHelper(context, DB_NAME) {
 
         val TABLE_status = "gent_t_status"
         val STATUS_comicID = "status_comic_id"
+        val STATUS_title = "status_title"
+        val STATUS_imageUrl = "status_image_url"
         val STATUS_isStar = "status_is_star"
         val STATUS_isDownload = "status_is_download"
+        val STATUS_createTime = "status_create_time"
 
         private var instance: DBUtil? = null
 
@@ -46,8 +49,11 @@ class DBUtil(context: Context) : ManagedSQLiteOpenHelper(context, DB_NAME) {
                 READ_lastReadDate to INTEGER)
         db?.createTable(TABLE_status, false,
                 STATUS_comicID to TEXT + PRIMARY_KEY,
+                STATUS_title to TEXT,
+                STATUS_imageUrl to TEXT,
                 STATUS_isStar to TEXT,
-                STATUS_isDownload to TEXT)
+                STATUS_isDownload to TEXT,
+                STATUS_createTime to INTEGER)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

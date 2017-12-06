@@ -12,7 +12,7 @@ import android.view.ViewGroup
  * 描    述：
  * ================================================
  */
-open class MainListHeaderPagerAdapter(private var views: List<View>) : PagerAdapter() {
+open class MainHomeHeaderPagerAdapter(private var views: List<View>) : PagerAdapter() {
     override fun getCount(): Int {
         return views.size
     }

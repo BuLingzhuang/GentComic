@@ -32,6 +32,8 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
     private val mInteractor = ComicIndexInteractorImpl()
     private lateinit var mAdapter: ComicIndexAdapter
     private lateinit var mStatus: ComicStatusEntity
+    private lateinit var mTitle: String
+    private lateinit var mImageUrl: String
 
     /**
      * 初始化Adapter
@@ -45,13 +47,19 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
     /**
      * 检查是否已收藏、已下载
      */
-    override fun checkStatus(context: Context, comicID: String) {
+    override fun checkStatus(context: Context, title: String, imageUrl: String, comicID: String) {
+        mTitle = title
+        mImageUrl = imageUrl
         context.database.use {
             val select = select(DBUtil.TABLE_status).whereSimple("${DBUtil.STATUS_comicID} = ?", comicID)
             val dataList = ArrayList<ComicStatusEntity>(select.parseList(ComicStatusRowParser()))
             mStatus = if (dataList.size <= 0) {
-                insert(DBUtil.TABLE_status, DBUtil.STATUS_comicID to comicID, DBUtil.STATUS_isStar to "0", DBUtil.STATUS_isDownload to "0")
-                ComicStatusEntity(comicID, false, false)
+                val timeMillis = System.currentTimeMillis()
+                insert(DBUtil.TABLE_status, DBUtil.STATUS_comicID to comicID,
+                        DBUtil.STATUS_title to mTitle, DBUtil.STATUS_imageUrl to mImageUrl,
+                        DBUtil.STATUS_isStar to "0", DBUtil.STATUS_isDownload to "0",
+                        DBUtil.STATUS_createTime to timeMillis)
+                ComicStatusEntity(comicID, title, imageUrl, false, false,timeMillis)
             } else {
                 dataList[0]
             }
@@ -67,8 +75,11 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
         context.database.use {
             update(DBUtil.TABLE_status,
                     DBUtil.STATUS_comicID to mStatus.comicID,
+                    DBUtil.STATUS_title to mTitle,
+                    DBUtil.STATUS_imageUrl to mImageUrl,
                     DBUtil.STATUS_isStar to if (currentStar) "1" else "0",
-                    DBUtil.STATUS_isDownload to mStatus.isDownload)
+                    DBUtil.STATUS_isDownload to mStatus.isDownload,
+                    DBUtil.STATUS_createTime to mStatus.createTime)
                     .whereArgs("${DBUtil.STATUS_comicID} = {${DBUtil.STATUS_comicID}}", DBUtil.STATUS_comicID to mStatus.comicID).exec()
         }
         mStatus.isStar = currentStar
