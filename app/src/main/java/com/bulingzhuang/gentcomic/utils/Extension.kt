@@ -61,3 +61,8 @@ fun showLogE(msg: String, tag: String = "BLZ") {
 }
 
 val Context.database: DBUtil get() = DBUtil.getInstance(this.applicationContext)
+
+
+fun setViewsOnClickListener(listener: View.OnClickListener,vararg views: View){
+    views.forEach { it.setOnClickListener(listener) }
+}

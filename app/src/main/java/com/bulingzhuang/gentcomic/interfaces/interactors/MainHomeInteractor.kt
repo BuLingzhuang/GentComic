@@ -18,10 +18,10 @@ interface MainHomeInteractor {
     /**
      * 请求天气数据
      */
-    fun requestWeatherData(observer:BaseObserver<WeatherData>,city:String)
+    fun requestWeatherData(observer: BaseObserver<WeatherData>, city: String)
 
     /**
      * 请求主页列表数据
      */
-    fun requestMainHomeListData(observer: ApiCallbackWithPage<MainListData>)
+    fun requestMainHomeListData(orderType: String, observer: ApiCallbackWithPage<MainListData>)
 }

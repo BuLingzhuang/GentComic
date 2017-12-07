@@ -37,7 +37,7 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
         }
     }
 
-    var onCreateTag = true
+    private var onCreateTag = true
 
     private lateinit var mPresenter: MainHomePresenter
 

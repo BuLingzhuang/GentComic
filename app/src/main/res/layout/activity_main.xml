@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/activity_horizontal_margin"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,6 +27,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"/>
 
+
         <ImageView
             android:id="@+id/iv_search"
             android:layout_width="40dp"
@@ -40,6 +40,33 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="6dp"
             app:srcCompat="@drawable/ic_search_black_24dp"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="3dp"
+            android:layout_toStartOf="@id/iv_search"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="6.3dp"
+                app:srcCompat="@drawable/ic_order"/>
+
+            <ImageView
+                android:id="@+id/iv_order_letter"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:paddingBottom="11dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="14dp"
+                android:paddingTop="11dp"
+                app:srcCompat="@drawable/ic_letter_p"/>
+        </RelativeLayout>
     </RelativeLayout>
 
     <!--<ImageView-->

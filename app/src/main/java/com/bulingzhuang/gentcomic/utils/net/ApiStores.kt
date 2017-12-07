@@ -35,10 +35,22 @@ interface ApiStores {
                     @Query("language") language: String = "zh-Hans", @Query("unit") unit: String = "c"): Observable<WeatherData>
 
     /**
-     * 获取主页列表协议
+     * 获取主页列表协议(Daily)
      */
     @GET("comic/top/daily/{pageNum}")
-    fun loadMainList(@Path("pageNum") pageNum: Int): Observable<MainListData>
+    fun loadMainListDaily(@Path("pageNum") pageNum: Int): Observable<MainListData>
+
+    /**
+     * 获取主页列表协议(Week)
+     */
+    @GET("comic/top/week/{pageNum}")
+    fun loadMainListWeek(@Path("pageNum") pageNum: Int): Observable<MainListData>
+
+    /**
+     * 获取主页列表协议(Pop)
+     */
+    @GET("comic/top/pop/{pageNum}")
+    fun loadMainListPop(@Path("pageNum") pageNum: Int): Observable<MainListData>
 
     /**
      * 获取漫画目录协议

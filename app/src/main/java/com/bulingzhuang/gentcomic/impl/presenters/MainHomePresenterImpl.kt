@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.adapters.MainHomeAdapter
 import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
 import com.bulingzhuang.gentcomic.entity.MainListData
@@ -147,25 +148,27 @@ class MainHomePresenterImpl(private val mView: MainHomeView, private val context
         if (hasNext) {
             showLogE("加载了第$mLastPageNum 页")
             refreshStarList()
-            mInteractor.requestMainHomeListData(object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
-                override fun onSuccess(module: MainListData, pageNum: Int) {
-                    mLastPageNum = pageNum
-                    if (mLastPageNum <= 1) {
-                        mAdapter.addAll(module.result)
-                    } else {
-                        mAdapter.addAll(module.result, false)
-                    }
-                }
+            mInteractor.requestMainHomeListData(
+                    SharePreferencesUtil.getString(Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY),
+                    object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
+                        override fun onSuccess(module: MainListData, pageNum: Int) {
+                            mLastPageNum = pageNum
+                            if (mLastPageNum <= 1) {
+                                mAdapter.addAll(module.result)
+                            } else {
+                                mAdapter.addAll(module.result, false)
+                            }
+                        }
 
-                override fun onFailure(msg: String?) {
-                    mView.showSnakeBar(msg?.let { it } ?: "请求失败")
-                }
+                        override fun onFailure(msg: String?) {
+                            mView.showSnakeBar(msg?.let { it } ?: "请求失败")
+                        }
 
-                override fun onFinish() {
-                    mView.setRefreshing(false)
-                }
+                        override fun onFinish() {
+                            mView.setRefreshing(false)
+                        }
 
-            })
+                    })
         }
     }
 

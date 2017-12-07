@@ -3,12 +3,18 @@ package com.bulingzhuang.gentcomic.activities
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.PopupMenu
+import android.view.MenuItem
+import android.view.View
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.adapters.CommonPagerAdapter
 import com.bulingzhuang.gentcomic.base.BaseFragment
 import com.bulingzhuang.gentcomic.fragments.MainHomeFragment
 import com.bulingzhuang.gentcomic.fragments.MainStarFragment
 import com.bulingzhuang.gentcomic.fragments.TestFragment
+import com.bulingzhuang.gentcomic.utils.Constants
+import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
+import com.bulingzhuang.gentcomic.utils.setViewsOnClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -20,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  * 修订历史：
  * ================================================
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private val mFragmentList = ArrayList<BaseFragment>()
 
@@ -30,7 +36,16 @@ class MainActivity : AppCompatActivity() {
         init()
     }
 
+    private lateinit var mOrderMenu: PopupMenu
+
     private fun init() {
+        mOrderMenu = PopupMenu(this, rl_order)
+        mOrderMenu.setOnMenuItemClickListener(this)
+        mOrderMenu.inflate(R.menu.order)
+
+        checkOrderType()
+        setViewsOnClickListener(this, iv_search, rl_order)
+
         mFragmentList.add(MainHomeFragment.newInstance(resources.getString(R.string.title_home)))
         mFragmentList.add(MainStarFragment.newInstance(resources.getString(R.string.title_star)))
         mFragmentList.add(TestFragment.newInstance(resources.getString(R.string.title_download)))
@@ -45,6 +60,16 @@ class MainActivity : AppCompatActivity() {
                     iv_search.scaleX = offset
                     iv_search.scaleY = offset
                     iv_search.alpha = offset
+                    rl_order.scaleX = offset
+                    rl_order.scaleY = offset
+                    rl_order.alpha = offset
+                } else {
+                    iv_search.scaleX = 0f
+                    iv_search.scaleY = 0f
+                    iv_search.alpha = 0f
+                    rl_order.scaleX = 0f
+                    rl_order.scaleY = 0f
+                    rl_order.alpha = 0f
                 }
             }
 
@@ -52,9 +77,7 @@ class MainActivity : AppCompatActivity() {
                 navigation.menu.getItem(position).isChecked = true
             }
         })
-        iv_search.setOnClickListener {
-            //TODO 搜索页面
-        }
+
         navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_home -> {
@@ -79,6 +102,57 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> return@setOnNavigationItemSelectedListener false
             }
+        }
+    }
+
+    /**
+     * 检查列表类型
+     */
+    private fun checkOrderType() {
+        val orderType = SharePreferencesUtil.getString(Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY)
+        when (orderType) {
+            Constants.ORDER_TYPE_DAILY -> {
+                iv_order_letter.setImageResource(R.drawable.ic_letter_d)
+            }
+            Constants.ORDER_TYPE_WEEK -> {
+                iv_order_letter.setImageResource(R.drawable.ic_letter_w)
+            }
+            Constants.ORDER_TYPE_POP -> {
+                iv_order_letter.setImageResource(R.drawable.ic_letter_p)
+            }
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.iv_search -> {
+                //TODO 搜索
+            }
+            R.id.rl_order -> {
+                mOrderMenu.show()
+            }
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.order_daily -> {
+                SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY)
+                iv_order_letter.setImageResource(R.drawable.ic_letter_d)
+                //TODO 刷新HOME页面
+                true
+            }
+            R.id.order_week -> {
+                SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_WEEK)
+                iv_order_letter.setImageResource(R.drawable.ic_letter_w)
+                true
+            }
+            R.id.order_pop -> {
+                SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_POP)
+                iv_order_letter.setImageResource(R.drawable.ic_letter_p)
+                true
+            }
+            else -> false
         }
     }
 }
