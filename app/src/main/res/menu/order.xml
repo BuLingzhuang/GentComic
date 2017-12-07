@@ -3,14 +3,17 @@
 
     <item
         android:id="@+id/order_daily"
+        android:checkable="true"
         android:title="@string/order_daily"/>
 
     <item
         android:id="@+id/order_week"
+        android:checkable="true"
         android:title="@string/order_week"/>
 
     <item
         android:id="@+id/order_pop"
+        android:checkable="true"
         android:title="@string/order_popular"/>
 
 </menu>

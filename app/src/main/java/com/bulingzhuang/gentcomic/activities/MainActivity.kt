@@ -15,6 +15,7 @@ import com.bulingzhuang.gentcomic.fragments.TestFragment
 import com.bulingzhuang.gentcomic.utils.Constants
 import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
 import com.bulingzhuang.gentcomic.utils.setViewsOnClickListener
+import com.bulingzhuang.gentcomic.utils.showLogE
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -29,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     private val mFragmentList = ArrayList<BaseFragment>()
+    private var mOrderType: String = Constants.ORDER_TYPE_DAILY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,17 +111,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenu
      * 检查列表类型
      */
     private fun checkOrderType() {
-        val orderType = SharePreferencesUtil.getString(Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY)
-        when (orderType) {
+        mOrderType = SharePreferencesUtil.getString(Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY)
+        when (mOrderType) {
             Constants.ORDER_TYPE_DAILY -> {
                 iv_order_letter.setImageResource(R.drawable.ic_letter_d)
+                setChecked(0)
             }
             Constants.ORDER_TYPE_WEEK -> {
                 iv_order_letter.setImageResource(R.drawable.ic_letter_w)
+                setChecked(1)
             }
             Constants.ORDER_TYPE_POP -> {
                 iv_order_letter.setImageResource(R.drawable.ic_letter_p)
+                setChecked(2)
             }
+        }
+    }
+
+    /**
+     * 设置菜单中的选中按钮
+     */
+    private fun setChecked(checkIndex: Int) {
+        val menu = mOrderMenu.menu
+        for (index in 0 until menu.size()) {
+            val item = menu.getItem(index)
+            item.isChecked = checkIndex == index
         }
     }
 
@@ -127,9 +143,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenu
         when (v?.id) {
             R.id.iv_search -> {
                 //TODO 搜索
+                if (vp_content.currentItem == 0) {
+                }
             }
             R.id.rl_order -> {
-                mOrderMenu.show()
+                if (vp_content.currentItem == 0) {
+                    mOrderMenu.show()
+                }
             }
         }
     }
@@ -137,22 +157,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenu
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.order_daily -> {
-                SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY)
-                iv_order_letter.setImageResource(R.drawable.ic_letter_d)
-                //TODO 刷新HOME页面
+                if (mOrderType != Constants.ORDER_TYPE_DAILY) {
+                    setChecked(0)
+                    SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY)
+                    mOrderType = Constants.ORDER_TYPE_DAILY
+                    iv_order_letter.setImageResource(R.drawable.ic_letter_d)
+                    refreshHomeData()
+                }
                 true
             }
             R.id.order_week -> {
-                SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_WEEK)
-                iv_order_letter.setImageResource(R.drawable.ic_letter_w)
+                if (mOrderType != Constants.ORDER_TYPE_WEEK) {
+                    setChecked(1)
+                    SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_WEEK)
+                    mOrderType = Constants.ORDER_TYPE_WEEK
+                    iv_order_letter.setImageResource(R.drawable.ic_letter_w)
+                    refreshHomeData()
+                }
                 true
             }
             R.id.order_pop -> {
-                SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_POP)
-                iv_order_letter.setImageResource(R.drawable.ic_letter_p)
+                if (mOrderType != Constants.ORDER_TYPE_POP) {
+                    setChecked(2)
+                    SharePreferencesUtil.setValue(this, Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_POP)
+                    mOrderType = Constants.ORDER_TYPE_POP
+                    iv_order_letter.setImageResource(R.drawable.ic_letter_p)
+                    refreshHomeData()
+                }
                 true
             }
             else -> false
+        }
+    }
+
+    private fun refreshHomeData() {
+        if (mFragmentList.size > 0) {
+            val fragment = mFragmentList[0]
+            if (fragment is MainHomeFragment) {
+                fragment.refreshData()
+            }
         }
     }
 }

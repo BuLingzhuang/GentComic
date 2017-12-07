@@ -1,9 +1,6 @@
 package com.bulingzhuang.gentcomic.interfaces.presenters
 
-import android.content.Context
 import android.support.annotation.Nullable
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 
 /**

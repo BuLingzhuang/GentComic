@@ -39,7 +39,7 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
 
     private var onCreateTag = true
 
-    private lateinit var mPresenter: MainHomePresenter
+    private var mPresenter: MainHomePresenter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -50,31 +50,35 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
         super.onViewCreated(view, savedInstanceState)
         init()
         onCreateTag = true
-        mPresenter.getMainHomeListData()
+        mPresenter?.getMainHomeListData()
     }
 
     override fun onResume() {
         super.onResume()
         if (!onCreateTag) {
             showLogE("本地刷新")
-            mPresenter.refreshStar()
+            mPresenter?.refreshStar()
         }
         onCreateTag = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mPresenter.onDestroy()
+        mPresenter?.onDestroy()
     }
 
     private fun init() {
-        mPresenter = MainHomePresenterImpl(this, activity)
-        mPresenter.initAdapter(rv_content)
+        mPresenter = MainHomePresenterImpl(this, activity,cl_gen)
+        mPresenter?.initAdapter(rv_content)
 
         srl_content.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark)
         srl_content.setOnRefreshListener {
-            mPresenter.getMainHomeListData()
+            mPresenter?.getMainHomeListData()
         }
+    }
+
+    fun refreshData(){
+        mPresenter?.getMainHomeListData()
     }
 
     override fun showSnakeBar(msg: String) {

@@ -4,4 +4,7 @@
     <string name="title_download">下载</string>
     <string name="title_mine">我的</string>
 
+    <string name="order_daily">今日列表(Daily)</string>
+    <string name="order_week">本周最热(Week)</string>
+    <string name="order_popular">最受欢迎(Popular)</string>
 </resources>

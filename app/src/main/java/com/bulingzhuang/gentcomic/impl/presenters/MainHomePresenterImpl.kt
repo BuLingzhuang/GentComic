@@ -1,9 +1,13 @@
 package com.bulingzhuang.gentcomic.impl.presenters
 
 import android.content.Context
+import android.support.constraint.ConstraintLayout
+import android.support.transition.Fade
+import android.support.transition.TransitionManager
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.adapters.MainHomeAdapter
 import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
@@ -31,7 +35,7 @@ import org.jetbrains.anko.db.select
  * 描    述：
  * ================================================
  */
-class MainHomePresenterImpl(private val mView: MainHomeView, private val context: FragmentActivity) : MainHomePresenter {
+class MainHomePresenterImpl(private val mView: MainHomeView, private val context: FragmentActivity,private val cl_gen: ConstraintLayout) : MainHomePresenter {
 
     private val mInteractor = MainHomeInteractorImpl()
     private lateinit var mAdapter: MainHomeAdapter
@@ -148,12 +152,14 @@ class MainHomePresenterImpl(private val mView: MainHomeView, private val context
         if (hasNext) {
             showLogE("加载了第$mLastPageNum 页")
             refreshStarList()
+            mView.setRefreshing(true)
             mInteractor.requestMainHomeListData(
                     SharePreferencesUtil.getString(Constants.SP_ORDER_TYPE, Constants.ORDER_TYPE_DAILY),
                     object : ApiCallbackWithPage<MainListData>(mLastPageNum) {
                         override fun onSuccess(module: MainListData, pageNum: Int) {
                             mLastPageNum = pageNum
                             if (mLastPageNum <= 1) {
+                                TransitionManager.beginDelayedTransition(cl_gen,Fade())
                                 mAdapter.addAll(module.result)
                             } else {
                                 mAdapter.addAll(module.result, false)
