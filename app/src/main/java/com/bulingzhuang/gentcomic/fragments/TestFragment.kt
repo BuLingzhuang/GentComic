@@ -34,10 +34,10 @@ class TestFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val inflate = inflater?.inflate(R.layout.fragment_test, container, false)
-        inflate?.findViewById<TextView>(R.id.tv_content)?.text = arguments.getString(TITLE, "")
+        val inflate = inflater.inflate(R.layout.fragment_test, container, false)
+        inflate?.findViewById<TextView>(R.id.tv_content)?.text = arguments?.getString(TITLE, "")
         return inflate
     }
 

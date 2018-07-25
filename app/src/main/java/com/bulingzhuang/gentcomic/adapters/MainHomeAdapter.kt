@@ -109,9 +109,9 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
         return mDataList.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = mDataList[position]
-        when (holder?.itemViewType) {
+        when (holder.itemViewType) {
             R.layout.adapter_main_home_header -> {
                 val viewHolder = holder as MainHomeHeaderViewHolder
                 viewHolder.mVpHeader.setPageTransformer(true, ScrollOffsetTransformer(isFullScreen))
@@ -157,7 +157,7 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflate = LayoutInflater.from(context).inflate(viewType, parent, false)
         return when (viewType) {
             R.layout.adapter_main_home_header -> {

@@ -36,26 +36,26 @@ class MainStarFragment : BaseFragment(), MainStarView {
         }
     }
 
-    private lateinit var mPresenter: MainStarPresenter
+    private var mPresenter: MainStarPresenter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_main_star, container, false)
+        return inflater.inflate(R.layout.fragment_main_star, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-        mPresenter.initStarAdapter(rv_content)
+        mPresenter?.initStarAdapter(rv_content)
     }
 
     private fun init() {
-        mPresenter = MainStarPresenterImpl(this, activity)
+        mPresenter = activity?.let { MainStarPresenterImpl(this, it) }
     }
 
     override fun onResume() {
         super.onResume()
-        mPresenter.refreshStarList()
+        mPresenter?.refreshStarList()
     }
 
     /**

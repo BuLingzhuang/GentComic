@@ -20,8 +20,8 @@ import retrofit2.http.Query
  */
 interface ApiStores {
     companion object {
-        val API_SERVER_URL = "http://39.106.7.250/"  //http://otakumate.top/
-        val API_NEW_WEATHER_SERVER_URL = "https://api.seniverse.com/"
+        const val API_SERVER_URL = "https://otakumate.top/"  //http://otakumate.top/
+        const val API_NEW_WEATHER_SERVER_URL = "https://api.seniverse.com/"
     }
 //    http://39.106.7.250:8080/comic/vols/3234_28320
 //    /comic/top/daily/{pageNum}

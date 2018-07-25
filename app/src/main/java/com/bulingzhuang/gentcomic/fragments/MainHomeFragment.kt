@@ -41,12 +41,16 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
 
     private var mPresenter: MainHomePresenter? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_main_home, container, false)
+//    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+//                              savedInstanceState: Bundle?): View? {
+//
+//    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_main_home, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
         onCreateTag = true
@@ -68,7 +72,7 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
     }
 
     private fun init() {
-        mPresenter = MainHomePresenterImpl(this, activity,cl_gen)
+        mPresenter = activity?.let { MainHomePresenterImpl(this, it,cl_gen) }
         mPresenter?.initAdapter(rv_content)
 
         srl_content.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark)
@@ -82,7 +86,7 @@ class MainHomeFragment : BaseFragment(), MainHomeView {
     }
 
     override fun showSnakeBar(msg: String) {
-        context.showSnakeBar(msg, cl_gen)
+        context?.showSnakeBar(msg, cl_gen)
     }
 
     override fun setRefreshing(refreshing: Boolean) {

@@ -1,14 +1,11 @@
 package com.bulingzhuang.gentcomic.impl.presenters
 
-import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.transition.Fade
 import android.support.transition.TransitionManager
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.adapters.MainHomeAdapter
 import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
 import com.bulingzhuang.gentcomic.entity.MainListData
@@ -63,16 +60,16 @@ class MainHomePresenterImpl(private val mView: MainHomeView, private val context
         mAdapter = MainHomeAdapter(context, isFullScreen)
         recyclerView.adapter = mAdapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastVisibleItem + 1 == mAdapter.itemCount) {
                     getMainHomeListData(false)
                 }
             }
 
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                mLastVisibleItem = (recyclerView?.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                mLastVisibleItem = (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
             }
         })
     }

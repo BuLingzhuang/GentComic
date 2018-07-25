@@ -36,19 +36,17 @@ class ComicAdapter(private val context: Context) : RecyclerView.Adapter<ComicAda
 
     override fun getItemCount(): Int = mDataList.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ComicViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicViewHolder {
         val inflate = LayoutInflater.from(context).inflate(R.layout.adapter_comic, parent, false)
         return ComicViewHolder(inflate)
     }
 
-    override fun onBindViewHolder(holder: ComicViewHolder?, position: Int) {
-        if (holder != null) {
-            val item = mDataList[position]
+    override fun onBindViewHolder(holder: ComicViewHolder, position: Int) {
+        val item = mDataList[position]
 //            val layoutParams = holder.itemView.layoutParams
 //            showLogE("计算前宽 = ${layoutParams.width}，计算前高 = ${layoutParams.height}")
 //            layoutParams.width = (layoutParams.height * item.aspectRatio).toInt()
-            GlideApp.with(context).load(item).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(holder.itemView as ImageView)
-        }
+        GlideApp.with(context).load(item).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(holder.itemView as ImageView)
     }
 
     inner class ComicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

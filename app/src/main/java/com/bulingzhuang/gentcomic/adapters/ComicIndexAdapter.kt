@@ -10,7 +10,6 @@ import android.widget.TextView
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.activities.ComicActivity
 import com.bulingzhuang.gentcomic.entity.ComicIndexData
-import com.bulingzhuang.gentcomic.utils.showToast
 
 /**
  * ================================================
@@ -29,28 +28,26 @@ class ComicIndexAdapter(private val context: Context, private val title: String,
         notifyItemRangeInserted(0, collection.size)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ComicIndexViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComicIndexViewHolder {
         val inflate = LayoutInflater.from(context).inflate(R.layout.adapter_comic_index, parent, false)
         return ComicIndexViewHolder(inflate)
     }
 
-    override fun onBindViewHolder(holder: ComicIndexViewHolder?, position: Int) {
-        if (holder != null) {
-            val item = mDataList[position]
-            holder.mTvTitle.text = item.title
-            holder.mVRead.visibility = if (item.hasRead) {
-                View.VISIBLE
-            } else {
-                View.INVISIBLE
-            }
-            holder.itemView.setOnClickListener {
-                val intent = Intent(context, ComicActivity::class.java)
-                intent.putExtra("title", title)
-                intent.putExtra("comicID", comicID)
-                intent.putExtra("subtitle", item.title)
-                intent.putExtra("volsID", item.volsID)
-                context.startActivity(intent)
-            }
+    override fun onBindViewHolder(holder: ComicIndexViewHolder, position: Int) {
+        val item = mDataList[position]
+        holder.mTvTitle.text = item.title
+        holder.mVRead.visibility = if (item.hasRead) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, ComicActivity::class.java)
+            intent.putExtra("title", title)
+            intent.putExtra("comicID", comicID)
+            intent.putExtra("subtitle", item.title)
+            intent.putExtra("volsID", item.volsID)
+            context.startActivity(intent)
         }
     }
 
