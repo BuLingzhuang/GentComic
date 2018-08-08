@@ -56,12 +56,12 @@ class ComicPresenterImpl(private val mView: ComicView) : ComicPresenter {
     /**
      * 获取漫画数据
      */
-    override fun getComicData(context: Context, volsID: String) {
+    override fun getComicData(context: Context, volID: String) {
         mView.showRefreshing()
-        mInteractor.requestComicData(volsID, object : ApiCallback<ComicData>() {
+        mInteractor.requestComicData(volID, object : ApiCallback<ComicData>() {
             override fun onSuccess(module: ComicData) {
-//                handleImageList(module.result)
-                mAdapter.addAll(module.result)
+//                handleImageList(module.data)
+                mAdapter.addAll(module.data)
             }
 
             override fun onFailure(msg: String?) {

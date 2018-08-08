@@ -8,9 +8,9 @@ package com.bulingzhuang.gentcomic.entity
  * 描    述：
  * ================================================
  */
-class ComicReadEntity(val volsID: String, val readTimes: Long, val comicID: String, val lastReadDate: Long) {
+class ComicReadEntity(val volID: String, val readTimes: Long, val comicID: String, val lastReadDate: Long) {
 
     override fun toString(): String {
-        return "volsID = $volsID，readTimes = $readTimes，comicID = $comicID，lastReadDate = $lastReadDate"
+        return "volID = $volID，readTimes = $readTimes，comicID = $comicID，lastReadDate = $lastReadDate"
     }
 }

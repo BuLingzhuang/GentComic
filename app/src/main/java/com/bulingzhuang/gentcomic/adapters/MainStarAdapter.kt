@@ -5,21 +5,19 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TextView
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.activities.ComicIndexActivity
 import com.bulingzhuang.gentcomic.base.GlideApp
 import com.bulingzhuang.gentcomic.entity.ComicStatusEntity
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.util.*
 
 /**
@@ -34,7 +32,7 @@ class MainStarAdapter(private val context: FragmentActivity) : RecyclerView.Adap
 
     private val mDataList = ArrayList<ComicStatusEntity>()
     private val random = Random()
-    private val marginPx = (context.resources.displayMetrics.density * 4 + 0.5f).toInt()
+    private val marginPx = (context.resources.displayMetrics.density * 5 + 0.5f).toInt()
 
     fun addAll(collection: Collection<ComicStatusEntity>) {
         mDataList.clear()
@@ -46,18 +44,18 @@ class MainStarAdapter(private val context: FragmentActivity) : RecyclerView.Adap
         val item = mDataList[position]
         when (position % 3) {
             0 -> {//左侧
-                (holder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 3, marginPx * 2, marginPx, marginPx * 2)
+                (holder.mLlContent.layoutParams as android.support.v7.widget.GridLayoutManager.LayoutParams).setMargins(marginPx * 3, marginPx * 2, marginPx, marginPx * 2)
             }
             1 -> {//中间
-                (holder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 2, marginPx * 2, marginPx * 2, marginPx * 2)
+                (holder.mLlContent.layoutParams as android.support.v7.widget.GridLayoutManager.LayoutParams).setMargins(marginPx * 2, marginPx * 2, marginPx * 2, marginPx * 2)
             }
             2 -> {//右侧
-                (holder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx, marginPx * 2, marginPx * 3, marginPx * 2)
+                (holder.mLlContent.layoutParams as android.support.v7.widget.GridLayoutManager.LayoutParams).setMargins(marginPx, marginPx * 2, marginPx * 3, marginPx * 2)
             }
         }
         val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
         val url = GlideUrl(item.imageUrl, build)
-        GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(holder.mIvContent)
+        GlideApp.with(context).load(url).placeholder(R.mipmap.loading).transition(DrawableTransitionOptions.withCrossFade()).error(R.mipmap.loading).into(holder.mIvContent)
         holder.mTvTitle.text = item.title
         holder.mIvFire.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
         if (item.isStar) {
@@ -70,7 +68,7 @@ class MainStarAdapter(private val context: FragmentActivity) : RecyclerView.Adap
         } else {
             holder.mIvDownload.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
         }
-        holder.mCvContent.setOnClickListener {
+        holder.mLlContent.setOnClickListener {
             val intent = Intent(context, ComicIndexActivity::class.java)
             intent.putExtra("comic_image", item.imageUrl)
             intent.putExtra("comic_id", item.comicID)
@@ -91,12 +89,5 @@ class MainStarAdapter(private val context: FragmentActivity) : RecyclerView.Adap
     /**
      * 列表内容
      */
-    inner class MainStarContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val mCvContent: CardView = itemView.findViewById(R.id.cv_content)
-        val mIvContent: ImageView = itemView.findViewById(R.id.iv_content)
-        val mTvTitle: TextView = itemView.findViewById(R.id.tv_title)
-        val mIvFire: ImageView = itemView.findViewById(R.id.iv_fire)
-        val mIvStar: ImageView = itemView.findViewById(R.id.iv_star)
-        val mIvDownload: ImageView = itemView.findViewById(R.id.iv_download)
-    }
+    inner class MainStarContentViewHolder(itemView: View) : MainHomeAdapter.MainHomeContentViewHolder(itemView)
 }

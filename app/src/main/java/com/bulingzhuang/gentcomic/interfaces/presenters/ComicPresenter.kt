@@ -22,7 +22,7 @@ interface ComicPresenter {
     /**
      * 获取漫画数据
      */
-    fun getComicData(context: Context,volsID:String)
+    fun getComicData(context: Context,volID:String)
 
     /**
      * 销毁操作

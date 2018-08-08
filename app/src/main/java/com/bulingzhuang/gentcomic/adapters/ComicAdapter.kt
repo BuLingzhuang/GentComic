@@ -10,6 +10,7 @@ import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.base.GlideApp
 import com.bulingzhuang.gentcomic.entity.ImageData
 import com.bulingzhuang.gentcomic.utils.showLogE
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 /**
  * ================================================
@@ -46,7 +47,7 @@ class ComicAdapter(private val context: Context) : RecyclerView.Adapter<ComicAda
 //            val layoutParams = holder.itemView.layoutParams
 //            showLogE("计算前宽 = ${layoutParams.width}，计算前高 = ${layoutParams.height}")
 //            layoutParams.width = (layoutParams.height * item.aspectRatio).toInt()
-        GlideApp.with(context).load(item).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(holder.itemView as ImageView)
+        GlideApp.with(context).load(item).placeholder(R.mipmap.loading).error(R.mipmap.loading).transition(DrawableTransitionOptions.withCrossFade()).into(holder.itemView as ImageView)
     }
 
     inner class ComicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

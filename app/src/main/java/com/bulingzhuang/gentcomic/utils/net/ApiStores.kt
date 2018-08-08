@@ -28,7 +28,7 @@ interface ApiStores {
 //    漫画
 //    /comic/{comicID}
 //    漫画下具体哪一集 返回图片列表直接
-//    /comic/vols/{volsID}
+//    /comic/vols/{volID}
 
     @GET("v3/weather/now.json")
     fun loadWeather(@Query("location") location: String = "上海", @Query("key") key: String = "0dgqeyrbpaxdhejn",
@@ -61,6 +61,6 @@ interface ApiStores {
     /**
      * 获取漫画协议
      */
-    @GET("comic/vols/{volsID}")
-    fun loadComic(@Path("volsID") volsID: String): Observable<ComicData>
+    @GET("comic/vols/{volID}")
+    fun loadComic(@Path("volID") volID: String): Observable<ComicData>
 }

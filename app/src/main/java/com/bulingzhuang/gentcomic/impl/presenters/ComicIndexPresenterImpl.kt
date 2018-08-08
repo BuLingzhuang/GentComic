@@ -101,9 +101,9 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
                 context.database.use {
                     val select = select(DBUtil.TABLE_read).whereSimple("${DBUtil.READ_comicID} = ?", comicID)
                     val dataList = ArrayList<ComicReadEntity>(select.parseList(ComicReadRowParser()))
-                    item@ for (item in module.result) {
+                    item@ for (item in module.data) {
                         childItem@ for (childItem in dataList) {
-                            if (item.volsID == childItem.volsID) {
+                            if (item.volID == childItem.volID) {
                                 //表示已读过
                                 item.hasRead = true
                                 if (dataList.remove(childItem)) {
@@ -117,7 +117,7 @@ class ComicIndexPresenterImpl(private val mView: ComicIndexView) : ComicIndexPre
                         }
                     }
                 }
-                mAdapter.addAll(module.result)
+                mAdapter.addAll(module.data)
             }
 
             override fun onFailure(msg: String?) {

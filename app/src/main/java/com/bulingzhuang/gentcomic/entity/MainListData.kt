@@ -9,7 +9,7 @@ package com.bulingzhuang.gentcomic.entity
  * 描    述：主页列表类
  * ================================================
  */
-class MainListData(val result: List<ResultBean>, code: Int, message: String) : BaseData(code, message) {
+class MainListData(val data: List<ResultBean>, code: Int, message: String) : BaseData(code, message) {
 
-    class ResultBean(val image: String, val commicName: String, val commicURL: String)
+    class ResultBean(val cover: String, val comicName: String, val comicID: String)
 }

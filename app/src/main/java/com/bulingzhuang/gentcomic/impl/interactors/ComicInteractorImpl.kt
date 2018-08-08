@@ -28,8 +28,8 @@ class ComicInteractorImpl : BaseInteractorImpl(), ComicInteractor {
     /**
      * 请求漫画数据
      */
-    override fun requestComicData(volsID: String, observer: ApiCallback<ComicData>) {
-        addSubscription(ApiClient.retrofit().loadComic(volsID), observer)
+    override fun requestComicData(volID: String, observer: ApiCallback<ComicData>) {
+        addSubscription(ApiClient.retrofit().loadComic(volID), observer)
     }
 
     /**

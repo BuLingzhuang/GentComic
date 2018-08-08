@@ -6,16 +6,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.adapters.CommonPagerAdapter
 import com.bulingzhuang.gentcomic.base.BaseFragment
 import com.bulingzhuang.gentcomic.fragments.MainHomeFragment
 import com.bulingzhuang.gentcomic.fragments.MainStarFragment
 import com.bulingzhuang.gentcomic.fragments.TestFragment
-import com.bulingzhuang.gentcomic.utils.Constants
-import com.bulingzhuang.gentcomic.utils.SharePreferencesUtil
-import com.bulingzhuang.gentcomic.utils.setViewsOnClickListener
-import com.bulingzhuang.gentcomic.utils.showLogE
+import com.bulingzhuang.gentcomic.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -84,22 +82,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, PopupMenu.OnMenu
             when (it.itemId) {
                 R.id.navigation_home -> {
                     vp_content.setCurrentItem(0, true)
-                    tv_title.setText(R.string.title_home)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_star -> {
                     vp_content.setCurrentItem(1, true)
-                    tv_title.setText(R.string.title_star)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_download -> {
                     vp_content.setCurrentItem(2, true)
-                    tv_title.setText(R.string.title_download)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_mine -> {
                     vp_content.setCurrentItem(3, true)
-                    tv_title.setText(R.string.title_mine)
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> return@setOnNavigationItemSelectedListener false

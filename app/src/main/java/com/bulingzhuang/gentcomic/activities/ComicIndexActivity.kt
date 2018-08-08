@@ -48,12 +48,12 @@ class ComicIndexActivity : AppCompatActivity(), View.OnClickListener, ComicIndex
         val comicID = intent.getStringExtra("comic_id")
         val imageUrl = intent.getStringExtra("comic_image")
         val title = intent.getStringExtra("comic_title")
-        mPresenter.checkStatus(this,title,imageUrl, comicID)
+        mPresenter.checkStatus(this, title, imageUrl, comicID)
         mPresenter.initAdapter(this, rv_content, title, comicID)
         setViewsOnClickListener(rl_back, rl_share, ll_star, ll_download)
         tv_title.text = title
         GlideApp.with(this).asDrawable().load(imageUrl).into(object : SimpleTarget<Drawable>() {
-            override fun onResourceReady(resource: Drawable?, transition: Transition<in Drawable>?) {
+            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                 if (resources != null) {
                     iv_header.setImageDrawable(resource)
                 }

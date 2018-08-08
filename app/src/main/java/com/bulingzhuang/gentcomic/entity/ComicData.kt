@@ -9,4 +9,4 @@ package com.bulingzhuang.gentcomic.entity
  * ================================================
  */
 
-class ComicData(code: Int, message: String, val result: ArrayList<String>) : BaseData(code, message)
+class ComicData(code: Int, message: String, val data: ArrayList<String>) : BaseData(code, message)

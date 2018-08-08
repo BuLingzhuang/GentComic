@@ -51,7 +51,7 @@ class SharePreferencesUtil {
          * 获取对应类型的数据
          */
         fun getString(key: String, default: String = ""): String {
-            return sp.getString(key, default)
+            return sp.getString(key, default).let { it } ?: default
         }
 
         fun getBoolean(key: String, default: Boolean = false): Boolean {

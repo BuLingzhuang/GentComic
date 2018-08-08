@@ -16,7 +16,7 @@ interface ComicInteractor {
     /**
      * 请求漫画数据
      */
-    fun requestComicData(volsID: String, observer: ApiCallback<ComicData>)
+    fun requestComicData(volID: String, observer: ApiCallback<ComicData>)
 
     /**
      * 处理漫画宽度

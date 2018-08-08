@@ -46,7 +46,7 @@ class ComicIndexAdapter(private val context: Context, private val title: String,
             intent.putExtra("title", title)
             intent.putExtra("comicID", comicID)
             intent.putExtra("subtitle", item.title)
-            intent.putExtra("volsID", item.volsID)
+            intent.putExtra("volID", item.volID)
             context.startActivity(intent)
         }
     }

@@ -157,9 +157,9 @@ class MainHomePresenterImpl(private val mView: MainHomeView, private val context
                             mLastPageNum = pageNum
                             if (mLastPageNum <= 1) {
                                 TransitionManager.beginDelayedTransition(cl_gen,Fade())
-                                mAdapter.addAll(module.result)
+                                mAdapter.addAll(module.data)
                             } else {
-                                mAdapter.addAll(module.result, false)
+                                mAdapter.addAll(module.data, false)
                             }
                         }
 

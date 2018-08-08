@@ -6,7 +6,6 @@ import android.content.res.ColorStateList
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Pair
 import android.view.LayoutInflater
@@ -20,9 +19,9 @@ import com.bulingzhuang.gentcomic.R
 import com.bulingzhuang.gentcomic.activities.ComicIndexActivity
 import com.bulingzhuang.gentcomic.base.GlideApp
 import com.bulingzhuang.gentcomic.entity.MainListData
-import com.bulingzhuang.gentcomic.utils.ScrollOffsetTransformer
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -44,7 +43,7 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
 
     init {
         val scale = context.resources.displayMetrics.density
-        marginPx = (scale * 4 + 0.5f).toInt()
+        marginPx = (scale * 5 + 0.5f).toInt()
     }
 
     /**
@@ -72,23 +71,23 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
                         mDataList.add(item)
                     } else {//头部内容
                         //初始化HeaderAdapter
-                        val inflate = LayoutInflater.from(context).inflate(R.layout.adapter_main_list_header_item, null) as LinearLayout
+                        val inflate = LayoutInflater.from(context).inflate(R.layout.adapter_main_list_header_item, null) as RelativeLayout
                         val ivContent = inflate.findViewById<ImageView>(R.id.iv_content)
                         val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
-                        val url = GlideUrl(item.image, build)
-                        GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(ivContent)
-                        inflate.findViewById<TextView>(R.id.tv_title).text = item.commicName
-                        if (mStarList.contains(item.commicURL)) {
+                        val url = GlideUrl(item.cover, build)
+                        GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).transition(DrawableTransitionOptions.withCrossFade()).into(ivContent)
+                        inflate.findViewById<TextView>(R.id.tv_title).text = item.comicName
+                        if (mStarList.contains(item.comicID)) {
                             inflate.findViewById<ImageView>(R.id.iv_star).imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
                         } else {
                             inflate.findViewById<ImageView>(R.id.iv_star).imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
                         }
                         inflate.findViewById<ImageView>(R.id.iv_fire).imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
-                        inflate.findViewById<CardView>(R.id.cv_content).setOnClickListener {
+                        inflate.setOnClickListener {
                             val intent = Intent(context, ComicIndexActivity::class.java)
-                            intent.putExtra("comic_image", item.image)
-                            intent.putExtra("comic_id", item.commicURL)
-                            intent.putExtra("comic_title", item.commicName)
+                            intent.putExtra("comic_image", item.cover)
+                            intent.putExtra("comic_id", item.comicID)
+                            intent.putExtra("comic_title", item.comicName)
                             val options = ActivityOptions.makeSceneTransitionAnimation(context,
                                     Pair(ivContent as View, "Image_Comic_Index_Header")).toBundle()
                             context.startActivity(intent, options)
@@ -114,41 +113,41 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
         when (holder.itemViewType) {
             R.layout.adapter_main_home_header -> {
                 val viewHolder = holder as MainHomeHeaderViewHolder
-                viewHolder.mVpHeader.setPageTransformer(true, ScrollOffsetTransformer(isFullScreen))
+//                viewHolder.mVpHeader.setPageTransformer(true, ScrollOffsetTransformer(isFullScreen))
                 viewHolder.mVpHeader.offscreenPageLimit = 2
                 viewHolder.mVpHeader.adapter = mHeaderPagerAdapter
                 mHeaderPagerAdapter?.count?.div(2)?.let { viewHolder.mVpHeader.currentItem = it }
             }
             R.layout.adapter_main_home -> {
                 val viewHolder = holder as MainHomeContentViewHolder
-                viewHolder.mTvTitle.text = item.commicName
+                viewHolder.mTvTitle.text = item.comicName
                 if (position > 0) {
                     when ((position - 1) % 3) {
                         0 -> {//左侧
-                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 3, marginPx * 2, marginPx, marginPx * 2)
+                            (viewHolder.mLlContent.layoutParams as android.support.v7.widget.GridLayoutManager.LayoutParams).setMargins(marginPx * 3, marginPx * 2, marginPx, marginPx * 2)
                         }
                         1 -> {//中间
-                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx * 2, marginPx * 2, marginPx * 2, marginPx * 2)
+                            (viewHolder.mLlContent.layoutParams as android.support.v7.widget.GridLayoutManager.LayoutParams).setMargins(marginPx * 2, marginPx * 2, marginPx * 2, marginPx * 2)
                         }
                         2 -> {//右侧
-                            (viewHolder.mCvContent.layoutParams as RelativeLayout.LayoutParams).setMargins(marginPx, marginPx * 2, marginPx * 3, marginPx * 2)
+                            (viewHolder.mLlContent.layoutParams as android.support.v7.widget.GridLayoutManager.LayoutParams).setMargins(marginPx, marginPx * 2, marginPx * 3, marginPx * 2)
                         }
                     }
                 }
-                if (mStarList.contains(item.commicURL)) {
-                    viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
+                if (mStarList.contains(item.comicID)) {
+                    viewHolder.mIvStar.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.amber600))
                 } else {
-                    viewHolder.mIvStart.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
+                    viewHolder.mIvStar.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.disable_gray))
                 }
                 viewHolder.mIvFire.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red600))
                 val build = LazyHeaders.Builder().addHeader("Referer", "http://3gmanhua.com/top/").build()
-                val url = GlideUrl(item.image, build)
-                GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).into(viewHolder.mIvContent)
-                viewHolder.mCvContent.setOnClickListener {
+                val url = GlideUrl(item.cover, build)
+                GlideApp.with(context).load(url).placeholder(R.mipmap.loading).error(R.mipmap.loading).transition(DrawableTransitionOptions.withCrossFade()).into(viewHolder.mIvContent)
+                viewHolder.mLlContent.setOnClickListener {
                     val intent = Intent(context, ComicIndexActivity::class.java)
-                    intent.putExtra("comic_image", item.image)
-                    intent.putExtra("comic_id", item.commicURL)
-                    intent.putExtra("comic_title", item.commicName)
+                    intent.putExtra("comic_image", item.cover)
+                    intent.putExtra("comic_id", item.comicID)
+                    intent.putExtra("comic_title", item.comicName)
                     val options = ActivityOptions.makeSceneTransitionAnimation(context,
                             Pair(viewHolder.mIvContent as View, "Image_Comic_Index_Header")).toBundle()
                     context.startActivity(intent, options)
@@ -183,12 +182,12 @@ class MainHomeAdapter(private val context: FragmentActivity, private val isFullS
     /**
      * 列表内容
      */
-    private inner class MainHomeContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val mCvContent: CardView = itemView.findViewById(R.id.cv_content)
+     open class MainHomeContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val mLlContent: LinearLayout = itemView.findViewById(R.id.ll_content)
         val mIvContent: ImageView = itemView.findViewById(R.id.iv_content)
         val mTvTitle: TextView = itemView.findViewById(R.id.tv_title)
         val mIvFire: ImageView = itemView.findViewById(R.id.iv_fire)
-        val mIvStart: ImageView = itemView.findViewById(R.id.iv_star)
+        val mIvStar: ImageView = itemView.findViewById(R.id.iv_star)
         val mIvDownload: ImageView = itemView.findViewById(R.id.iv_download)
     }
 

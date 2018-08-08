@@ -108,7 +108,7 @@
             android:layout_height="20dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:tint="@android:color/white"
-            app:srcCompat="@drawable/ic_star_black_24dp"/>
+            app:srcCompat="@drawable/ic_main_bar_star"/>
 
         <TextView
             android:id="@+id/tv_star"
@@ -140,7 +140,7 @@
             android:layout_height="20dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:tint="@android:color/white"
-            app:srcCompat="@drawable/ic_download_black_24dp"/>
+            app:srcCompat="@drawable/ic_main_bar_download"/>
 
         <TextView
             android:id="@+id/tv_download"

@@ -18,7 +18,7 @@ class DBUtil(context: Context) : ManagedSQLiteOpenHelper(context, DB_NAME) {
         val DB_NAME = "gent_comic_db"
 
         val TABLE_read = "gent_t_read"
-        val READ_volsID = "vols_id"
+        val READ_volID = "vols_id"
         val READ_readTimes = "read_times"
         val READ_comicID = "comic_id"
         val READ_lastReadDate = "last_read_date"
@@ -43,7 +43,7 @@ class DBUtil(context: Context) : ManagedSQLiteOpenHelper(context, DB_NAME) {
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.createTable(TABLE_read, false,
-                READ_volsID to TEXT + PRIMARY_KEY,
+                READ_volID to TEXT + PRIMARY_KEY,
                 READ_readTimes to INTEGER + NOT_NULL,
                 READ_comicID to TEXT,
                 READ_lastReadDate to INTEGER)

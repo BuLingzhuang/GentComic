@@ -36,17 +36,17 @@ class ComicActivity : AppCompatActivity(), ComicView {
     private fun init() {
         val title = intent.getStringExtra("title")
         val subtitle = intent.getStringExtra("subtitle")
-        val volsID = intent.getStringExtra("volsID")
+        val volID = intent.getStringExtra("volID")
         val comicID = intent.getStringExtra("comicID")
 
         database.use {
-            val select = select(DBUtil.TABLE_read).whereSimple("${DBUtil.READ_volsID} = ?", volsID)
+            val select = select(DBUtil.TABLE_read).whereSimple("${DBUtil.READ_volID} = ?", volID)
             val dataList = ArrayList<ComicReadEntity>(select.parseList(ComicReadRowParser()))
             when (dataList.size) {
                 0 -> {//插入
                     showLogE("插入操作，$comicID")
                     insert(DBUtil.TABLE_read,
-                            DBUtil.READ_volsID to volsID,
+                            DBUtil.READ_volID to volID,
                             DBUtil.READ_readTimes to 0,
                             DBUtil.READ_comicID to comicID,
                             DBUtil.READ_lastReadDate to System.currentTimeMillis())
@@ -55,7 +55,7 @@ class ComicActivity : AppCompatActivity(), ComicView {
                     showLogE("更新操作，$comicID")
                     val item = dataList[0]
                     update(DBUtil.TABLE_read, DBUtil.READ_readTimes to item.readTimes + 1, DBUtil.READ_lastReadDate to System.currentTimeMillis())
-                            .whereArgs("${DBUtil.READ_volsID} = {${DBUtil.READ_volsID}}", DBUtil.READ_volsID to volsID).exec()
+                            .whereArgs("${DBUtil.READ_volID} = {${DBUtil.READ_volID}}", DBUtil.READ_volID to volID).exec()
                 }
                 else -> {
                 }
@@ -63,7 +63,7 @@ class ComicActivity : AppCompatActivity(), ComicView {
         }
 
         mPresenter.init(this, tv_battery, iv_charging, tv_time, tv_net, rv_content)
-        mPresenter.getComicData(this, volsID)
+        mPresenter.getComicData(this, volID)
 
         tv_title.text = title
         tv_subtitle.text = subtitle
